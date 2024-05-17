@@ -1,6 +1,6 @@
 // types.ts
 export type RootStackParamList = {
-  Login: undefined;
+  SignIn: undefined;
   SignUp: undefined;
   Home: { userName: string };
 };

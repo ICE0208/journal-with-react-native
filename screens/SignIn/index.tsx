@@ -1,14 +1,15 @@
 // LoginScreen.tsx
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View, Button } from "react-native";
+import { Text, TextInput, View, Button } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "firebaseConfig";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
+import styles from "./style";
 
 type SignUpScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
-  "Login"
+  "SignIn"
 >;
 
 type Props = {
@@ -63,21 +64,3 @@ export default function LoginScreen({ navigation }: Props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 16,
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 12,
-    width: "100%",
-    paddingHorizontal: 8,
-  },
-});

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useState, useLayoutEffect, useRef } from "react";
+import { Button, Text, TextInput, View } from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
@@ -13,6 +13,7 @@ import {
   Unsubscribe,
 } from "firebase/firestore";
 import { auth, db } from "firebaseConfig";
+import styles from "./styles";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, "Home">;
@@ -89,7 +90,7 @@ export default function HomeScreen({ navigation, route }: Props) {
           try {
             unsubscribe.current();
             await auth.signOut();
-            navigation.replace("Login");
+            navigation.replace("SignIn");
             // 로그아웃 성공 후 필요한 작업
           } catch (error) {
             console.error("Error signing out: ", error);
@@ -104,28 +105,3 @@ export default function HomeScreen({ navigation, route }: Props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  welcome: {
-    fontSize: 20,
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 12,
-    width: "100%",
-    paddingHorizontal: 8,
-  },
-  memoContainer: {
-    marginTop: 20,
-    width: "100%",
-    paddingHorizontal: 8,
-  },
-});

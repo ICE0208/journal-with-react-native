@@ -1,5 +1,18 @@
-import React, { useState, useLayoutEffect, useRef } from "react";
-import { Button, Text, TextInput, View } from "react-native";
+import React, {
+  useState,
+  useLayoutEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
+import {
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
@@ -14,6 +27,8 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "firebaseConfig";
 import styles from "./styles";
+import { throttle } from "lodash";
+import { isCallChain } from "typescript";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, "Home">;
@@ -28,6 +43,7 @@ export default function HomeScreen({ navigation, route }: Props) {
   const [memos, setMemos] = useState<string[]>([]);
   const { userName } = route.params;
   const unsubscribe = useRef<Unsubscribe>(() => {});
+  const [isScrollDown, setIsScrollDown] = useState(false);
 
   // 메모 실시간 업데이트 구독
   useLayoutEffect(() => {
@@ -48,33 +64,39 @@ export default function HomeScreen({ navigation, route }: Props) {
     return () => unsubscribe.current();
   }, []);
 
-  const handleAddMemo = async () => {
-    try {
-      // 현재 사용자의 UID 가져오기
-      const currentUser = auth.currentUser;
-      if (!currentUser) {
-        console.error("No current user found.");
-        return;
-      }
-      const currentUserId = currentUser.uid;
+  // const handleAddMemo = async () => {
+  //   try {
+  //     // 현재 사용자의 UID 가져오기
+  //     const currentUser = auth.currentUser;
+  //     if (!currentUser) {
+  //       console.error("No current user found.");
+  //       return;
+  //     }
+  //     const currentUserId = currentUser.uid;
 
-      // 'memos' 컬렉션에 메모 추가
-      await addDoc(collection(db, "users", currentUserId, "memos"), {
-        content: memo,
-        createdAt: serverTimestamp(),
-      });
+  //     // 'memos' 컬렉션에 메모 추가
+  //     await addDoc(collection(db, "users", currentUserId, "memos"), {
+  //       content: memo,
+  //       createdAt: serverTimestamp(),
+  //     });
 
-      // 메모 추가 후 입력 필드 비우기
-      setMemo("");
-    } catch (error) {
-      console.error("Error adding memo: ", error);
-    }
+  //     // 메모 추가 후 입력 필드 비우기
+  //     setMemo("");
+  //   } catch (error) {
+  //     console.error("Error adding memo: ", error);
+  //   }
+  // };
+
+  const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    setIsScrollDown(e.nativeEvent.contentOffset.y > 0);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.welcome}>Welcome, {userName}!</Text>
-      <TextInput
+      <SafeAreaView style={isScrollDown && { backgroundColor: "#45379f" }}>
+        <Text style={styles.screenTitle}>일기</Text>
+      </SafeAreaView>
+      {/* <TextInput
         style={styles.input}
         placeholder="Enter memo"
         value={memo}
@@ -96,12 +118,21 @@ export default function HomeScreen({ navigation, route }: Props) {
             console.error("Error signing out: ", error);
           }
         }}
-      />
-      <View style={styles.memoContainer}>
+      /> */}
+      <ScrollView
+        contentContainerStyle={styles.memosContainer}
+        onScroll={handleScroll}
+        scrollEventThrottle={100}
+      >
         {memos.map((memo, index) => (
-          <Text key={index}>{memo}</Text>
+          <View
+            key={index}
+            style={styles.memoContainer}
+          >
+            <Text style={styles.memoText}>{memo}</Text>
+          </View>
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 }

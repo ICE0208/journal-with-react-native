@@ -34,7 +34,7 @@ export default function ModalHeader({ left, right, center }: Props) {
             position: "absolute",
             left: 0,
           },
-          { opacity: pressed ? 0.6 : 0.8 },
+          { opacity: pressed ? 0.7 : 1 },
         ]}
       >
         <Text
@@ -63,7 +63,7 @@ export default function ModalHeader({ left, right, center }: Props) {
             position: "absolute",
             right: 0,
           },
-          { opacity: pressed ? 0.6 : 0.8 },
+          { opacity: pressed ? 0.7 : 1 },
         ]}
       >
         <Text

@@ -38,17 +38,6 @@ const styles = StyleSheet.create({
     display: "flex",
     gap: 10,
   },
-  memoContainer: {
-    backgroundColor: "rgba(0,0,0,0.3)",
-    padding: 20,
-    marginHorizontal: 20,
-    borderRadius: 10,
-  },
-  memoText: {
-    color: "ghostwhite",
-    fontWeight: "500",
-    fontSize: 16,
-  },
 });
 
 export default styles;

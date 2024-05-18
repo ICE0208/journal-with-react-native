@@ -17,9 +17,11 @@ import {
   query,
   orderBy,
   Unsubscribe,
+  Timestamp,
 } from "firebase/firestore";
 import { auth, db } from "firebaseConfig";
 import styles from "./styles";
+import Journal from "components/Journal";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, "Home">;
@@ -30,7 +32,9 @@ type Props = {
 };
 
 export default function HomeScreen({ navigation, route }: Props) {
-  const [memos, setMemos] = useState<string[]>([]);
+  const [datas, setDatas] = useState<
+    { content: string; createdAt: Timestamp; id: string }[]
+  >([]);
   const { userName } = route.params;
   const unsubscribe = useRef<Unsubscribe>(() => {});
   const [isScrollDown, setIsScrollDown] = useState(false);
@@ -47,8 +51,12 @@ export default function HomeScreen({ navigation, route }: Props) {
         orderBy("createdAt", "desc")
       ),
       (snapshot) => {
-        const updatedMemos = snapshot.docs.map((doc) => doc.data().content);
-        setMemos(updatedMemos);
+        const updatedDatas = snapshot.docs.map((doc) => ({
+          content: doc.data().content,
+          createdAt: doc.data().createdAt,
+          id: doc.id,
+        }));
+        setDatas(updatedDatas);
       }
     );
     return () => unsubscribe.current();
@@ -69,13 +77,11 @@ export default function HomeScreen({ navigation, route }: Props) {
         onScroll={handleScroll}
         scrollEventThrottle={100}
       >
-        {memos.map((memo, index) => (
-          <View
-            key={index}
-            style={styles.memoContainer}
-          >
-            <Text style={styles.memoText}>{memo}</Text>
-          </View>
+        {datas.map((data, index) => (
+          <Journal
+            key={data.id}
+            textData={data.content}
+          />
         ))}
       </ScrollView>
       <Pressable

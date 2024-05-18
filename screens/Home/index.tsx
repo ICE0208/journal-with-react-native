@@ -18,11 +18,13 @@ import {
   orderBy,
   Unsubscribe,
   Timestamp,
+  getDocs,
 } from "firebase/firestore";
 import { auth, db } from "firebaseConfig";
 import styles from "./styles";
 import Journal from "components/Journal";
 import Toast from "react-native-toast-message";
+import Journals from "components/Journals";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, "Home">;
@@ -39,12 +41,33 @@ export default function HomeScreen({ navigation, route }: Props) {
   const { userName } = route.params;
   const unsubscribe = useRef<Unsubscribe>(() => {});
   const [isScrollDown, setIsScrollDown] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // 메모 실시간 업데이트 구독
+  const getInitDatas = async () => {
+    const initDocs = await getDocs(
+      query(
+        collection(db, "users", auth.currentUser!.uid, "memos"),
+        orderBy("createdAt", "desc")
+      )
+    );
+
+    const initDatas = initDocs.docs.map((doc) => ({
+      content: doc.data().content,
+      createdAt: doc.data().createdAt,
+      id: doc.id,
+    }));
+    setDatas(initDatas);
+    setIsLoading(false);
+  };
+
+  // 초기 데이터 불러오기
+  // 데이터 실시간 업데이트 구독
   useLayoutEffect(() => {
     if (!auth.currentUser) {
       navigation.pop();
     }
+
+    getInitDatas();
 
     unsubscribe.current = onSnapshot(
       query(
@@ -81,29 +104,11 @@ export default function HomeScreen({ navigation, route }: Props) {
         <Text style={styles.screenTitle}>일기</Text>
         <Text style={styles.welcomeText}>Hello, {userName}</Text>
       </SafeAreaView>
-      {datas.length > 0 ? (
-        <ScrollView
-          contentContainerStyle={styles.memosContainer}
-          onScroll={handleScroll}
-          scrollEventThrottle={100}
-        >
-          {datas.map((data) => (
-            <Journal
-              key={data.id}
-              textData={data.content}
-              id={data.id}
-              createdAt={data.createdAt?.toDate() ?? new Date()}
-            />
-          ))}
-        </ScrollView>
-      ) : (
-        <View style={styles.nothingContainer}>
-          <Text style={styles.nothingText}>Nothing Here</Text>
-          <Text style={styles.nothingText2}>
-            + 버튼을 눌러서 새 일기를 작성해주세요.
-          </Text>
-        </View>
-      )}
+      <Journals
+        isLoading={isLoading}
+        datas={datas}
+        onScroll={handleScroll}
+      />
       <Pressable
         onPress={() => navigation.navigate("New")}
         style={({ pressed }) => [

@@ -30,32 +30,6 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingHorizontal: 8,
   },
-  memosContainer: {
-    flexGrow: 1,
-    paddingHorizontal: 18,
-    paddingTop: 20,
-    paddingBottom: 60,
-    width: "100%",
-    display: "flex",
-    gap: 10,
-  },
-  nothingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingBottom: 120,
-    gap: 16,
-  },
-  nothingText: {
-    fontSize: 28,
-    fontWeight: "700",
-    color: "white",
-  },
-  nothingText2: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "white",
-  },
 });
 
 export default styles;

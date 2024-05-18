@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { Text, View, Button, Pressable } from "react-native";
+import { Text, View, Pressable } from "react-native";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "firebaseConfig";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
 import styles from "./style";
 import AuthInput from "components/AuthInput";
+import Toast from "react-native-toast-message";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { FirebaseError } from "firebase/app";
 
 type SignUpScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -21,13 +24,18 @@ export default function SignUpScreen({ navigation }: Props) {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [messageColor, setMessageColor] = useState("black");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignUp = () => {
+    if (isLoading) return;
+    setIsLoading(true);
+
     if (password !== confirmPassword) {
-      setMessage("Passwords do not match.");
-      setMessageColor("red");
+      Toast.show({
+        type: "error",
+        text1: "비밀번호 불일치",
+        text2: "비밀번호와 비밀번호 확인을 같게 해주세요.",
+      });
       return;
     }
 
@@ -39,67 +47,84 @@ export default function SignUpScreen({ navigation }: Props) {
         });
       })
       .then(() => {
-        setMessage("Account created successfully!");
-        setMessageColor("green");
-        navigation.navigate("SignIn");
+        navigation.replace("SignIn", { signUpSuccess: true });
       })
       .catch((error) => {
-        setMessage(error.message);
-        setMessageColor("red");
-      });
+        let text2 = "잠시후 다시 시도해주세요.";
+        if (error instanceof FirebaseError) {
+          text2 = error.message;
+        }
+        Toast.show({
+          type: "error",
+          text1: "가입 실패",
+          text2,
+        });
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
-    <View style={styles.container}>
-      <AuthInput
-        label="Name"
-        value={name}
-        onChangeText={(v) => setName(v)}
-        placeholder="abc123"
-      />
-      <AuthInput
-        label="Email ID"
-        value={id}
-        onChangeText={(v) => setId(v)}
-        placeholder="abc123@gmail.com"
-      />
-      <AuthInput
-        label="Password"
-        value={password}
-        onChangeText={(v) => setPassword(v)}
-        placeholder="1234*#"
-        type="PASSWORD"
-      />
-      <AuthInput
-        label="Confirm Password"
-        value={confirmPassword}
-        onChangeText={(v) => setConfirmPassword(v)}
-        placeholder="1234*#"
-        type="PASSWORD"
-      />
-      <Pressable
-        onPress={handleSignUp}
-        style={({ pressed }) => [
-          { width: "100%", display: "flex", alignItems: "center" },
-          { opacity: pressed ? 0.8 : 1 },
-        ]}
-      >
-        <View style={styles.signUpButton}>
-          <Text style={styles.SsignUpButtonText}>Sign Up</Text>
-        </View>
-      </Pressable>
-      {message ? <Text style={{ color: messageColor }}>{message}</Text> : null}
-      <Pressable
-        onPress={() => navigation.pop()}
-        style={({ pressed }) => [
-          { width: "100%", display: "flex", alignItems: "center" },
-          { opacity: pressed ? 0.8 : 1 },
-        ]}
-      >
-        <View style={styles.backButton}>
-          <Text style={styles.backButtonText}>Back</Text>
-        </View>
-      </Pressable>
-    </View>
+    <KeyboardAwareScrollView
+      style={{ backgroundColor: "#fff" }}
+      extraHeight={80} // For Android
+      extraScrollHeight={80} // For IOS
+    >
+      <View style={styles.container}>
+        <AuthInput
+          label="Name"
+          value={name}
+          onChangeText={(v) => setName(v)}
+          placeholder="abc123"
+        />
+        <AuthInput
+          label="Email ID"
+          value={id}
+          onChangeText={(v) => setId(v)}
+          placeholder="abc123@gmail.com"
+        />
+        <AuthInput
+          label="Password"
+          value={password}
+          onChangeText={(v) => setPassword(v)}
+          placeholder="1234*#"
+          type="PASSWORD"
+        />
+        <AuthInput
+          label="Confirm Password"
+          value={confirmPassword}
+          onChangeText={(v) => setConfirmPassword(v)}
+          placeholder="1234*#"
+          type="PASSWORD"
+        />
+        <Pressable
+          onPress={handleSignUp}
+          style={({ pressed }) => [
+            { width: "100%", display: "flex", alignItems: "center" },
+            { opacity: pressed ? 0.8 : 1 },
+          ]}
+        >
+          <View style={styles.signUpButton}>
+            <Text style={styles.signUpButtonText}>
+              {isLoading ? "Loading..." : "Sign Up"}
+            </Text>
+          </View>
+        </Pressable>
+        <Pressable
+          onPress={() => navigation.pop()}
+          style={({ pressed }) => [
+            { width: "100%", display: "flex", alignItems: "center" },
+            { opacity: pressed ? 0.8 : 1 },
+          ]}
+        >
+          <View style={styles.backButton}>
+            <Text style={styles.backButtonText}>Back</Text>
+          </View>
+        </Pressable>
+        <Toast
+          topOffset={20}
+          config={{}}
+        />
+      </View>
+    </KeyboardAwareScrollView>
   );
 }

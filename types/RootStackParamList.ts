@@ -4,4 +4,5 @@ export type RootStackParamList = {
   SignUp: undefined;
   Home: { userName: string };
   New: undefined;
+  Edit: { journalId: string };
 };

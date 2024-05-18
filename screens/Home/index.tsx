@@ -34,7 +34,12 @@ type Props = {
 
 export default function HomeScreen({ navigation, route }: Props) {
   const [datas, setDatas] = useState<
-    { content: string; createdAt: Timestamp; id: string }[]
+    {
+      content: string;
+      createdAt: Timestamp;
+      updatedAt: Timestamp | undefined;
+      id: string;
+    }[]
   >([]);
   const { userName } = route.params;
   const unsubscribe = useRef<Unsubscribe>(() => {});
@@ -52,6 +57,7 @@ export default function HomeScreen({ navigation, route }: Props) {
     const initDatas = initDocs.docs.map((doc) => ({
       content: doc.data().content,
       createdAt: doc.data().createdAt,
+      updatedAt: doc.data().updatedAt,
       id: doc.id,
     }));
     setDatas(initDatas);
@@ -76,6 +82,7 @@ export default function HomeScreen({ navigation, route }: Props) {
         const updatedDatas = snapshot.docs.map((doc) => ({
           content: doc.data().content,
           createdAt: doc.data().createdAt,
+          updatedAt: doc.data().updatedAt,
           id: doc.id,
         }));
         setDatas(updatedDatas);

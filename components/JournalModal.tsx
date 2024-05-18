@@ -1,4 +1,6 @@
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { RootStackParamList } from "@myTypes/RootStackParamList";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { FirebaseError } from "firebase/app";
 import { deleteDoc, doc } from "firebase/firestore";
 import { auth, db } from "firebaseConfig";
@@ -19,10 +21,15 @@ export default function JournalModal({
   modalPosition,
 }: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
+  const navigation =
+    useNavigation<NavigationProp<RootStackParamList, "Home">>();
 
-  const handleEdit = () => {
-    console.log("Edit button clicked");
+  const handleEdit = async () => {
     setModalVisible(false);
+
+    setTimeout(() => {
+      navigation.navigate("Edit", { journalId });
+    });
   };
 
   const handleDelete = async (memoId: string) => {
@@ -38,7 +45,7 @@ export default function JournalModal({
         cancelButtonIndex,
         destructiveButtonIndex,
         message,
-        autoFocus: true, // 안드로이드, 웹을 위해 필요
+        autoFocus: true,
       },
       async (selectedIndex: number | undefined) => {
         if (selectedIndex === destructiveButtonIndex) {
@@ -50,7 +57,6 @@ export default function JournalModal({
           const currentUserId = currentUser.uid;
 
           try {
-            // 메모 삭제
             await deleteDoc(doc(db, "users", currentUserId, "memos", memoId));
             console.log("Memo deleted successfully");
             Toast.show({

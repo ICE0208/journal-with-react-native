@@ -14,6 +14,7 @@ interface Props {
   datas: {
     content: string;
     createdAt: Timestamp;
+    updatedAt: Timestamp | undefined;
     id: string;
   }[];
   onScroll: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
@@ -32,14 +33,18 @@ export default function Journals({ datas, isLoading, onScroll }: Props) {
           onScroll={onScroll}
           scrollEventThrottle={100}
         >
-          {datas.map((data) => (
-            <Journal
-              key={data.id}
-              textData={data.content}
-              id={data.id}
-              createdAt={data.createdAt?.toDate() ?? new Date()}
-            />
-          ))}
+          {datas.map((data) => {
+            // 내용을 업데이트했을 때 다시 렌더링되도록 키값을 업데이트 시간을 기준으로 수정
+            const key = `${data.id}-${data.updatedAt ?? 0}`;
+            return (
+              <Journal
+                key={key}
+                textData={data.content}
+                id={data.id}
+                createdAt={data.createdAt?.toDate() ?? new Date()}
+              />
+            );
+          })}
         </ScrollView>
       ) : (
         <View style={styles.infoContainer}>

@@ -6,6 +6,7 @@ import { auth, db } from "firebaseConfig";
 import { useKeyboard } from "hooks/useKeyboard";
 import { useRef, useState } from "react";
 import { TextInput, View } from "react-native";
+import Toast from "react-native-toast-message";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "New">;
 

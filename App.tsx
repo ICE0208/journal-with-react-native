@@ -6,8 +6,8 @@ import HomeScreen from "@screens/Home";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import NewScreen from "@screens/New";
-import Toast from "react-native-toast-message";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
+import EditScreen from "@screens/Edit";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -37,6 +37,15 @@ export default function App() {
             component={NewScreen}
             options={{
               title: "새로운 일기 작성",
+              headerShown: false,
+              presentation: "modal",
+            }}
+          />
+          <Stack.Screen
+            name="Edit"
+            component={EditScreen}
+            options={{
+              title: "일기 수정",
               headerShown: false,
               presentation: "modal",
             }}

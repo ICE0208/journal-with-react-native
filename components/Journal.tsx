@@ -137,7 +137,9 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "800",
     fontSize: 20,
-    padding: 4,
+    paddingVertical: 5,
+    paddingLeft: 12,
+    paddingRight: 4,
   },
   menu: {
     position: "absolute",

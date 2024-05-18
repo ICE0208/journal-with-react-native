@@ -13,21 +13,6 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 50,
   },
-  inputView: {
-    display: "flex",
-    width: "100%",
-    marginBottom: 16,
-  },
-  inputLabel: {
-    fontWeight: "600",
-    fontSize: 16,
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderBottomWidth: 1,
-    width: "100%",
-  },
   loginButton: {
     width: "50%",
     backgroundColor: "slateblue",

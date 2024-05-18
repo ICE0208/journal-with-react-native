@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Text, TextInput, View, Button, Pressable } from "react-native";
+import { Text, View, Pressable } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "firebaseConfig";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
 import styles from "./style";
+import AuthInput from "components/AuthInput";
 
 type SignUpScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -39,25 +40,19 @@ export default function LoginScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign In</Text>
-      <View style={styles.inputView}>
-        <Text style={styles.inputLabel}>Email ID</Text>
-        <TextInput
-          style={styles.input}
-          value={id}
-          onChangeText={setId}
-          placeholder="abc123@gmail.com"
-        />
-      </View>
-      <View style={styles.inputView}>
-        <Text style={styles.inputLabel}>Password</Text>
-        <TextInput
-          style={styles.input}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          placeholder="1234*#"
-        />
-      </View>
+      <AuthInput
+        label="Email ID"
+        value={id}
+        onChangeText={(v) => setId(v)}
+        placeholder="abc123@gmail.com"
+      />
+      <AuthInput
+        label="Password"
+        value={password}
+        onChangeText={(v) => setPassword(v)}
+        placeholder="1234*#"
+        type="PASSWORD"
+      />
       <Pressable
         onPress={handleLogin}
         style={({ pressed }) => [

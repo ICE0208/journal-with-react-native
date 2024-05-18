@@ -3,8 +3,10 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import ModalHeader from "components/ModalHeader";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "firebaseConfig";
+import { useKeyboard } from "hooks/useKeyboard";
 import { useRef, useState } from "react";
 import { Text, TextInput, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "New">;
 
@@ -15,6 +17,8 @@ type Props = {
 export default function NewScreen({ navigation }: Props) {
   const [value, setValue] = useState("");
   const isLoading = useRef(false);
+
+  const kayboardHeight = useKeyboard();
 
   const handleConfirm = async () => {
     if (isLoading.current) return;
@@ -63,22 +67,25 @@ export default function NewScreen({ navigation }: Props) {
         right={{ text: "확인", onPress: handleConfirm }}
         center={{ text: "새로운 일기" }}
       />
-      <TextInput
-        style={{
-          marginTop: 30,
-          width: "100%",
-          color: "ghostwhite",
-          fontSize: 16,
-          flex: 1,
-        }}
-        onChangeText={setValue}
-        value={value}
-        placeholder="글쓰기를 시작하세요..."
-        placeholderTextColor="ghostwhite"
-        multiline={true}
-        textAlignVertical="top"
-        autoFocus={true}
-      />
+      <View style={{ flex: 1, width: "100%", paddingBottom: kayboardHeight }}>
+        <TextInput
+          style={{
+            marginTop: 30,
+            width: "100%",
+            color: "ghostwhite",
+            fontSize: 16,
+            flex: 1,
+          }}
+          onChangeText={setValue}
+          value={value}
+          placeholder="글쓰기를 시작하세요..."
+          placeholderTextColor="ghostwhite"
+          multiline={true}
+          textAlignVertical="top"
+          autoFocus={true}
+          scrollEnabled={true}
+        />
+      </View>
     </View>
   );
 }

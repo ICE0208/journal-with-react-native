@@ -6,6 +6,7 @@ import HomeScreen from "@screens/Home";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import NewScreen from "@screens/New";
+import Toast from "react-native-toast-message";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -17,6 +18,7 @@ export default function App() {
           name="SignIn"
           component={LoginScreen}
           options={{ headerShown: false }}
+          initialParams={{ signUpSuccess: false }}
         />
         <Stack.Screen
           name="SignUp"

@@ -5,7 +5,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    padding: 40,
+    paddingHorizontal: 50,
+    paddingTop: 100,
   },
   signUpButton: {
     width: "50%",
@@ -13,7 +14,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     margin: 12,
   },
-  SsignUpButtonText: {
+  signUpButtonText: {
     color: "white",
     paddingVertical: 12,
     paddingHorizontal: 30,

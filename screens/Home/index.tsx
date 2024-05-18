@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useRef } from "react";
+import React, { useState, useLayoutEffect, useRef, useEffect } from "react";
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -22,6 +22,7 @@ import {
 import { auth, db } from "firebaseConfig";
 import styles from "./styles";
 import Journal from "components/Journal";
+import Toast from "react-native-toast-message";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, "Home">;
@@ -60,6 +61,14 @@ export default function HomeScreen({ navigation, route }: Props) {
       }
     );
     return () => unsubscribe.current();
+  }, []);
+
+  useEffect(() => {
+    Toast.show({
+      type: "success",
+      text1: "로그인 성공",
+      text2: "로그인에 성공했습니다",
+    });
   }, []);
 
   const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -122,6 +131,7 @@ export default function HomeScreen({ navigation, route }: Props) {
           </Text>
         </View>
       </Pressable>
+      <Toast topOffset={70} />
     </View>
   );
 }

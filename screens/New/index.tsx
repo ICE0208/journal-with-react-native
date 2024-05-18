@@ -5,8 +5,7 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "firebaseConfig";
 import { useKeyboard } from "hooks/useKeyboard";
 import { useRef, useState } from "react";
-import { Text, TextInput, View } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { TextInput, View } from "react-native";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "New">;
 

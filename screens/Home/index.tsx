@@ -2,9 +2,7 @@ import React, { useState, useLayoutEffect, useRef, useEffect } from "react";
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
-  Pressable,
   SafeAreaView,
-  ScrollView,
   Text,
   View,
 } from "react-native";
@@ -22,7 +20,6 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "firebaseConfig";
 import styles from "./styles";
-import Journal from "components/Journal";
 import Toast from "react-native-toast-message";
 import Journals from "components/Journals";
 import NewJournalBtn from "components/NewJournalBtn";

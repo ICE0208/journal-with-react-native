@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Text,
-  View,
-  Pressable,
-  Keyboard,
-  GestureResponderEvent,
-} from "react-native";
+import { Text, View, Pressable } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "firebaseConfig";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -14,7 +8,6 @@ import styles from "./style";
 import AuthInput from "components/AuthInput";
 import Toast from "react-native-toast-message";
 import { RouteProp } from "@react-navigation/native";
-import KeyboardDismissWrapper from "components/KeyboardDismissWrapper";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 type SignInScreenNavigationProp = StackNavigationProp<

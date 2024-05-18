@@ -2,14 +2,7 @@ import { useActionSheet } from "@expo/react-native-action-sheet";
 import { FirebaseError } from "firebase/app";
 import { deleteDoc, doc } from "firebase/firestore";
 import { auth, db } from "firebaseConfig";
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 interface Props {

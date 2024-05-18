@@ -14,7 +14,6 @@ import { RootStackParamList } from "@myTypes/RootStackParamList";
 import styles from "./style";
 import AuthInput from "components/AuthInput";
 import Toast from "react-native-toast-message";
-import KeyboardDismissWrapper from "components/KeyboardDismissWrapper";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 type SignUpScreenNavigationProp = StackNavigationProp<

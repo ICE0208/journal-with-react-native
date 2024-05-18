@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import formatDate from "utils/formatDate";
 import Divider from "./Divider";
 import JournalModal from "./JournalModal";
+import Toast from "react-native-toast-message";
 
 interface Props {
   textData: string;
@@ -89,11 +90,12 @@ export default function Journal({ textData, id, createdAt }: Props) {
       )}
 
       <JournalModal
-        modalId={id}
+        journalId={id}
         modalPosition={modalPosition}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
       />
+      <Toast />
     </View>
   );
 }

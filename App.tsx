@@ -1,12 +1,12 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
 import SignUpScreen from "@screens/SignUp";
 import LoginScreen from "@screens/SignIn";
 import HomeScreen from "@screens/Home";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-const Stack = createStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
@@ -15,6 +15,7 @@ export default function App() {
         <Stack.Screen
           name="SignIn"
           component={LoginScreen}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="SignUp"

@@ -81,6 +81,8 @@ export default function HomeScreen({ navigation, route }: Props) {
           <Journal
             key={data.id}
             textData={data.content}
+            id={data.id}
+            createdAt={data.createdAt?.toDate() ?? new Date()}
           />
         ))}
       </ScrollView>

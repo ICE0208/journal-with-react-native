@@ -23,6 +23,7 @@ import styles from "./styles";
 import Toast from "react-native-toast-message";
 import Journals from "components/Journals";
 import NewJournalBtn from "components/NewJournalBtn";
+import { JournalDatas } from "@myTypes/JournalDatas";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, "Home">;
@@ -33,14 +34,7 @@ type Props = {
 };
 
 export default function HomeScreen({ navigation, route }: Props) {
-  const [datas, setDatas] = useState<
-    {
-      content: string;
-      createdAt: Timestamp;
-      updatedAt: Timestamp | undefined;
-      id: string;
-    }[]
-  >([]);
+  const [datas, setDatas] = useState<JournalDatas>([]);
   const { userName } = route.params;
   const unsubscribe = useRef<Unsubscribe>(() => {});
   const [isScrollDown, setIsScrollDown] = useState(false);

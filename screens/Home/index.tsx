@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useLayoutEffect,
-  useRef,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useState, useLayoutEffect, useRef } from "react";
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -18,9 +12,7 @@ import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
 import {
-  addDoc,
   collection,
-  serverTimestamp,
   onSnapshot,
   query,
   orderBy,
@@ -28,8 +20,6 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "firebaseConfig";
 import styles from "./styles";
-import { throttle } from "lodash";
-import { isCallChain } from "typescript";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, "Home">;
@@ -65,29 +55,6 @@ export default function HomeScreen({ navigation, route }: Props) {
     return () => unsubscribe.current();
   }, []);
 
-  // const handleAddMemo = async () => {
-  //   try {
-  //     // 현재 사용자의 UID 가져오기
-  //     const currentUser = auth.currentUser;
-  //     if (!currentUser) {
-  //       console.error("No current user found.");
-  //       return;
-  //     }
-  //     const currentUserId = currentUser.uid;
-
-  //     // 'memos' 컬렉션에 메모 추가
-  //     await addDoc(collection(db, "users", currentUserId, "memos"), {
-  //       content: memo,
-  //       createdAt: serverTimestamp(),
-  //     });
-
-  //     // 메모 추가 후 입력 필드 비우기
-  //     setMemo("");
-  //   } catch (error) {
-  //     console.error("Error adding memo: ", error);
-  //   }
-  // };
-
   const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     setIsScrollDown(e.nativeEvent.contentOffset.y > 0);
   };
@@ -97,29 +64,6 @@ export default function HomeScreen({ navigation, route }: Props) {
       <SafeAreaView style={isScrollDown && { backgroundColor: "#45379f" }}>
         <Text style={styles.screenTitle}>일기</Text>
       </SafeAreaView>
-      {/* <TextInput
-        style={styles.input}
-        placeholder="Enter memo"
-        value={memo}
-        onChangeText={setMemo}
-      />
-      <Button
-        title="Add Memo"
-        onPress={handleAddMemo}
-      />
-      <Button
-        title="Logout"
-        onPress={async () => {
-          try {
-            unsubscribe.current();
-            await auth.signOut();
-            navigation.replace("SignIn");
-            // 로그아웃 성공 후 필요한 작업
-          } catch (error) {
-            console.error("Error signing out: ", error);
-          }
-        }}
-      /> */}
       <ScrollView
         contentContainerStyle={styles.memosContainer}
         onScroll={handleScroll}

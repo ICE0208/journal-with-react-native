@@ -40,7 +40,7 @@ export default function ModalHeader({ left, right, center }: Props) {
         <Text
           style={{
             color: left.color ?? "gray",
-            fontSize: 16,
+            fontSize: 18,
             fontWeight: 800,
           }}
         >
@@ -51,7 +51,7 @@ export default function ModalHeader({ left, right, center }: Props) {
         style={{
           color: center.color ?? "white",
           fontWeight: 600,
-          fontSize: 18,
+          fontSize: 20,
         }}
       >
         {center.text}
@@ -69,7 +69,7 @@ export default function ModalHeader({ left, right, center }: Props) {
         <Text
           style={{
             color: right.color ?? "slateblue",
-            fontSize: 16,
+            fontSize: 18,
             fontWeight: 900,
           }}
         >

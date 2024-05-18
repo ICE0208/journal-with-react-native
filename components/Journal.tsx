@@ -46,15 +46,27 @@ export default function Journal({ textData, id, createdAt }: Props) {
           </View>
         </Pressable>
       ) : (
-        <Text
-          style={{}}
-          onTextLayout={({ nativeEvent: { lines } }) => {
-            setLines(lines.length);
-            setShowMore(lines.length > NUM_OF_LINES);
-          }}
-        >
-          {textData}
-        </Text>
+        <View style={styles.journalContainer}>
+          <Text
+            style={styles.journalText}
+            onTextLayout={({ nativeEvent: { lines } }) => {
+              setLines(lines.length);
+              setShowMore(lines.length > NUM_OF_LINES);
+            }}
+          >
+            {textData}
+          </Text>
+          <View
+            style={{
+              width: "100%",
+              borderBottomWidth: 1.4,
+              borderBottomColor: "rgba(255,255,255,0.3)",
+              marginTop: 14,
+              marginBottom: 8,
+            }}
+          />
+          <Text style={styles.dateText}>{formatDate(createdAt)}</Text>
+        </View>
       )}
     </>
   );

@@ -8,6 +8,7 @@ import React, {
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Pressable,
   SafeAreaView,
   ScrollView,
   Text,
@@ -133,6 +134,42 @@ export default function HomeScreen({ navigation, route }: Props) {
           </View>
         ))}
       </ScrollView>
+      <Pressable
+        onPress={() => navigation.navigate("New")}
+        style={({ pressed }) => [
+          {
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            position: "absolute",
+            bottom: 34,
+          },
+          { opacity: pressed ? 0.6 : 0.8 },
+        ]}
+      >
+        <View
+          style={{
+            backgroundColor: "royalblue",
+            width: 70,
+            height: 70,
+            borderRadius: 50,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              color: "ghostwhite",
+              padding: 12,
+              fontWeight: 400,
+              fontSize: 32,
+            }}
+          >
+            +
+          </Text>
+        </View>
+      </Pressable>
     </View>
   );
 }

@@ -5,6 +5,7 @@ import LoginScreen from "@screens/SignIn";
 import HomeScreen from "@screens/Home";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import NewScreen from "@screens/New";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -26,6 +27,15 @@ export default function App() {
           name="Home"
           component={HomeScreen}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="New"
+          component={NewScreen}
+          options={{
+            title: "새로운 일기 작성",
+            headerShown: false,
+            presentation: "modal",
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

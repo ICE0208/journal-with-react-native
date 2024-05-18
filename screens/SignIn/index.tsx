@@ -1,11 +1,11 @@
-// LoginScreen.tsx
 import React, { useState } from "react";
-import { Text, TextInput, View, Button } from "react-native";
+import { Text, View, Pressable } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "firebaseConfig";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
 import styles from "./style";
+import AuthInput from "components/AuthInput";
 
 type SignUpScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -39,28 +39,43 @@ export default function LoginScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
+      <Text style={styles.title}>Sign In</Text>
+      <AuthInput
+        label="Email ID"
         value={id}
-        onChangeText={setId}
+        onChangeText={(v) => setId(v)}
+        placeholder="abc123@gmail.com"
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
+      <AuthInput
+        label="Password"
         value={password}
-        onChangeText={setPassword}
-        secureTextEntry
+        onChangeText={(v) => setPassword(v)}
+        placeholder="1234*#"
+        type="PASSWORD"
       />
-      <Button
-        title="Login"
+      <Pressable
         onPress={handleLogin}
-      />
+        style={({ pressed }) => [
+          { width: "100%", display: "flex", alignItems: "center" },
+          { opacity: pressed ? 0.8 : 1 },
+        ]}
+      >
+        <View style={styles.loginButton}>
+          <Text style={styles.loginButtonText}>Login</Text>
+        </View>
+      </Pressable>
       {message ? <Text style={{ color: messageColor }}>{message}</Text> : null}
-      <Button
-        title="Go to Sign Up"
+      <Pressable
         onPress={() => navigation.navigate("SignUp")}
-      />
+        style={({ pressed }) => [
+          { width: "100%", display: "flex", alignItems: "center" },
+          { opacity: pressed ? 0.8 : 1 },
+        ]}
+      >
+        <View style={styles.signUpButton}>
+          <Text style={styles.signUpButtonText}>SignUp</Text>
+        </View>
+      </Pressable>
     </View>
   );
 }

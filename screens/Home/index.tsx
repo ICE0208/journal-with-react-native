@@ -81,20 +81,29 @@ export default function HomeScreen({ navigation, route }: Props) {
         <Text style={styles.screenTitle}>일기</Text>
         <Text style={styles.welcomeText}>Hello, {userName}</Text>
       </SafeAreaView>
-      <ScrollView
-        contentContainerStyle={styles.memosContainer}
-        onScroll={handleScroll}
-        scrollEventThrottle={100}
-      >
-        {datas.map((data, index) => (
-          <Journal
-            key={data.id}
-            textData={data.content}
-            id={data.id}
-            createdAt={data.createdAt?.toDate() ?? new Date()}
-          />
-        ))}
-      </ScrollView>
+      {datas.length > 0 ? (
+        <ScrollView
+          contentContainerStyle={styles.memosContainer}
+          onScroll={handleScroll}
+          scrollEventThrottle={100}
+        >
+          {datas.map((data) => (
+            <Journal
+              key={data.id}
+              textData={data.content}
+              id={data.id}
+              createdAt={data.createdAt?.toDate() ?? new Date()}
+            />
+          ))}
+        </ScrollView>
+      ) : (
+        <View style={styles.nothingContainer}>
+          <Text style={styles.nothingText}>Nothing Here</Text>
+          <Text style={styles.nothingText2}>
+            + 버튼을 눌러서 새 일기를 작성해주세요.
+          </Text>
+        </View>
+      )}
       <Pressable
         onPress={() => navigation.navigate("New")}
         style={({ pressed }) => [
@@ -103,9 +112,9 @@ export default function HomeScreen({ navigation, route }: Props) {
             display: "flex",
             alignItems: "center",
             position: "absolute",
-            bottom: 34,
+            bottom: 40,
           },
-          { opacity: pressed ? 0.6 : 0.8 },
+          { opacity: pressed ? 0.6 : 0.9 },
         ]}
       >
         <View
@@ -123,8 +132,9 @@ export default function HomeScreen({ navigation, route }: Props) {
             style={{
               color: "ghostwhite",
               padding: 12,
-              fontWeight: 400,
-              fontSize: 32,
+              paddingBottom: 22,
+              fontWeight: 600,
+              fontSize: 36,
             }}
           >
             +

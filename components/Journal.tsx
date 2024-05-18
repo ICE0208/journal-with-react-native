@@ -1,14 +1,8 @@
 import React, { useState, useRef } from "react";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Modal,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import formatDate from "utils/formatDate";
 import Divider from "./Divider";
+import JournalModal from "./JournalModal";
 
 interface Props {
   textData: string;
@@ -22,24 +16,14 @@ export default function Journal({ textData, id, createdAt }: Props) {
   const [showMore, setShowMore] = useState(false);
   const [lines, setLines] = useState(-1);
   const [isExpand, setIsExpand] = useState(false);
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const buttonRef = useRef<View>(null);
-
-  const handleEdit = () => {
-    console.log("Edit button clicked");
-    setMenuVisible(false);
-  };
-
-  const handleDelete = () => {
-    console.log("Delete button clicked");
-    setMenuVisible(false);
-  };
 
   const showMenu = () => {
     buttonRef.current?.measure((fx, fy, width, height, px, py) => {
       setMenuPosition({ x: px - 60, y: py + height });
-      setMenuVisible(true);
+      setModalVisible(true);
     });
   };
 
@@ -104,33 +88,12 @@ export default function Journal({ textData, id, createdAt }: Props) {
         </View>
       )}
 
-      <Modal
-        visible={menuVisible}
-        transparent={true}
-        onRequestClose={() => setMenuVisible(false)}
-      >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          onPress={() => setMenuVisible(false)}
-        >
-          <View
-            style={[styles.menu, { top: menuPosition.y, left: menuPosition.x }]}
-          >
-            <TouchableOpacity
-              style={styles.menuButton}
-              onPress={handleEdit}
-            >
-              <Text style={styles.editButtonText}>편집</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.menuButton}
-              onPress={handleDelete}
-            >
-              <Text style={styles.deleteButtonText}>삭제</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      </Modal>
+      <JournalModal
+        modalId={id}
+        modalPosition={modalPosition}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
     </View>
   );
 }

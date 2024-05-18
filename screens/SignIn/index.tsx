@@ -25,8 +25,12 @@ type Props = {
 export default function LoginScreen({ navigation, route }: Props) {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = () => {
+    if (isLoading) return;
+    setIsLoading(true);
+
     signInWithEmailAndPassword(auth, id, password)
       .then((userCredential) => {
         navigation.replace("Home", {
@@ -43,7 +47,8 @@ export default function LoginScreen({ navigation, route }: Props) {
           text1: "로그인 실패",
           text2,
         });
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {
@@ -88,7 +93,9 @@ export default function LoginScreen({ navigation, route }: Props) {
           ]}
         >
           <View style={styles.loginButton}>
-            <Text style={styles.loginButtonText}>Login</Text>
+            <Text style={styles.loginButtonText}>
+              {isLoading ? "Loading..." : "Login"}
+            </Text>
           </View>
         </Pressable>
         <Pressable

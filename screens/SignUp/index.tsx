@@ -24,9 +24,12 @@ export default function SignUpScreen({ navigation }: Props) {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [messageColor, setMessageColor] = useState("black");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignUp = () => {
+    if (isLoading) return;
+    setIsLoading(true);
+
     if (password !== confirmPassword) {
       Toast.show({
         type: "error",
@@ -56,7 +59,8 @@ export default function SignUpScreen({ navigation }: Props) {
           text1: "가입 실패",
           text2,
         });
-      });
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -100,7 +104,9 @@ export default function SignUpScreen({ navigation }: Props) {
           ]}
         >
           <View style={styles.signUpButton}>
-            <Text style={styles.signUpButtonText}>Sign Up</Text>
+            <Text style={styles.signUpButtonText}>
+              {isLoading ? "Loading..." : "Sign Up"}
+            </Text>
           </View>
         </Pressable>
         <Pressable

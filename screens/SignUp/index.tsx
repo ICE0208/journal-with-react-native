@@ -8,6 +8,7 @@ import styles from "./style";
 import AuthInput from "components/AuthInput";
 import Toast from "react-native-toast-message";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { FirebaseError } from "firebase/app";
 
 type SignUpScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -45,11 +46,15 @@ export default function SignUpScreen({ navigation }: Props) {
       .then(() => {
         navigation.replace("SignIn", { signUpSuccess: true });
       })
-      .catch((error: { message: string }) => {
+      .catch((error) => {
+        let text2 = "잠시후 다시 시도해주세요.";
+        if (error instanceof FirebaseError) {
+          text2 = error.message;
+        }
         Toast.show({
           type: "error",
           text1: "가입 실패",
-          text2: `${error.message}`,
+          text2,
         });
       });
   };

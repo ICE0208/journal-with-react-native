@@ -9,6 +9,7 @@ import AuthInput from "components/AuthInput";
 import Toast from "react-native-toast-message";
 import { RouteProp } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { FirebaseError } from "firebase/app";
 
 type SignInScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -32,11 +33,15 @@ export default function LoginScreen({ navigation, route }: Props) {
           userName: userCredential.user.displayName ?? "NULL",
         });
       })
-      .catch((error: { message: string }) => {
+      .catch((error) => {
+        let text2 = "잠시후 다시 시도해주세요.";
+        if (error instanceof FirebaseError) {
+          text2 = error.message;
+        }
         Toast.show({
           type: "error",
           text1: "로그인 실패",
-          text2: `${error.message}`,
+          text2,
         });
       });
   };

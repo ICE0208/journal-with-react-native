@@ -20,6 +20,7 @@ export default function App() {
         <Stack.Screen
           name="SignUp"
           component={SignUpScreen}
+          options={{ presentation: "modal" }}
         />
         <Stack.Screen
           name="Home"

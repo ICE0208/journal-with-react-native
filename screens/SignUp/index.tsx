@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Text, TextInput, View, Button } from "react-native";
+import { Text, View, Button, Pressable } from "react-native";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "firebaseConfig";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
 import styles from "./style";
+import AuthInput from "components/AuthInput";
 
 type SignUpScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -16,10 +17,10 @@ type Props = {
 };
 
 export default function SignUpScreen({ navigation }: Props) {
+  const [name, setName] = useState("");
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [messageColor, setMessageColor] = useState("black");
 
@@ -50,37 +51,55 @@ export default function SignUpScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Name"
+      <AuthInput
+        label="Name"
         value={name}
-        onChangeText={setName}
+        onChangeText={(v) => setName(v)}
+        placeholder="abc123"
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
+      <AuthInput
+        label="Email ID"
         value={id}
-        onChangeText={setId}
+        onChangeText={(v) => setId(v)}
+        placeholder="abc123@gmail.com"
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
+      <AuthInput
+        label="Password"
         value={password}
-        onChangeText={setPassword}
-        secureTextEntry
+        onChangeText={(v) => setPassword(v)}
+        placeholder="1234*#"
+        type="PASSWORD"
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Confirm Password"
+      <AuthInput
+        label="Confirm Password"
         value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        secureTextEntry
+        onChangeText={(v) => setConfirmPassword(v)}
+        placeholder="1234*#"
+        type="PASSWORD"
       />
-      <Button
-        title="Sign Up"
+      <Pressable
         onPress={handleSignUp}
-      />
+        style={({ pressed }) => [
+          { width: "100%", display: "flex", alignItems: "center" },
+          { opacity: pressed ? 0.8 : 1 },
+        ]}
+      >
+        <View style={styles.signUpButton}>
+          <Text style={styles.SsignUpButtonText}>Sign Up</Text>
+        </View>
+      </Pressable>
       {message ? <Text style={{ color: messageColor }}>{message}</Text> : null}
+      <Pressable
+        onPress={() => navigation.pop()}
+        style={({ pressed }) => [
+          { width: "100%", display: "flex", alignItems: "center" },
+          { opacity: pressed ? 0.8 : 1 },
+        ]}
+      >
+        <View style={styles.backButton}>
+          <Text style={styles.backButtonText}>Back</Text>
+        </View>
+      </Pressable>
     </View>
   );
 }

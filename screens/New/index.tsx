@@ -8,10 +8,10 @@ import { useRef, useState } from "react";
 import { TextInput, View } from "react-native";
 import Toast from "react-native-toast-message";
 
-type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "New">;
+type NewScreenNavigationProp = StackNavigationProp<RootStackParamList, "New">;
 
 type Props = {
-  navigation: HomeScreenNavigationProp;
+  navigation: NewScreenNavigationProp;
 };
 
 export default function NewScreen({ navigation }: Props) {

@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: 18,
     paddingTop: 20,
-    paddingBottom: 60,
+    paddingBottom: 130,
     width: "100%",
     display: "flex",
     gap: 10,

@@ -25,6 +25,7 @@ import styles from "./styles";
 import Journal from "components/Journal";
 import Toast from "react-native-toast-message";
 import Journals from "components/Journals";
+import NewJournalBtn from "components/NewJournalBtn";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, "Home">;
@@ -109,43 +110,7 @@ export default function HomeScreen({ navigation, route }: Props) {
         datas={datas}
         onScroll={handleScroll}
       />
-      <Pressable
-        onPress={() => navigation.navigate("New")}
-        style={({ pressed }) => [
-          {
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            position: "absolute",
-            bottom: 40,
-          },
-          { opacity: pressed ? 0.6 : 0.9 },
-        ]}
-      >
-        <View
-          style={{
-            backgroundColor: "royalblue",
-            width: 70,
-            height: 70,
-            borderRadius: 50,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text
-            style={{
-              color: "ghostwhite",
-              padding: 12,
-              paddingBottom: 22,
-              fontWeight: 600,
-              fontSize: 36,
-            }}
-          >
-            +
-          </Text>
-        </View>
-      </Pressable>
+      <NewJournalBtn onPress={() => navigation.navigate("New")} />
       <Toast topOffset={70} />
     </View>
   );

@@ -28,7 +28,7 @@ export default function Journals({ datas, isLoading, onScroll }: Props) {
         </View>
       ) : datas.length > 0 ? (
         <ScrollView
-          contentContainerStyle={styles.datasContainer}
+          contentContainerStyle={styles.memosContainer}
           onScroll={onScroll}
           scrollEventThrottle={100}
         >
@@ -54,7 +54,7 @@ export default function Journals({ datas, isLoading, onScroll }: Props) {
 }
 
 const styles = StyleSheet.create({
-  datasContainer: {
+  memosContainer: {
     flexGrow: 1,
     paddingHorizontal: 18,
     paddingTop: 20,

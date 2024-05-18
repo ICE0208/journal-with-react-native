@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   memosContainer: {
-    flex: 1,
+    flexGrow: 1,
     paddingHorizontal: 18,
     paddingTop: 20,
     paddingBottom: 60,

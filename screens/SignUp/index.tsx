@@ -63,67 +63,65 @@ export default function SignUpScreen({ navigation }: Props) {
   };
 
   return (
-    <KeyboardDismissWrapper>
-      <KeyboardAwareScrollView
-        style={{ backgroundColor: "#fff" }}
-        extraHeight={80} // For Android
-        extraScrollHeight={80} // For IOS
-      >
-        <View style={styles.container}>
-          <AuthInput
-            label="Name"
-            value={name}
-            onChangeText={(v) => setName(v)}
-            placeholder="abc123"
-          />
-          <AuthInput
-            label="Email ID"
-            value={id}
-            onChangeText={(v) => setId(v)}
-            placeholder="abc123@gmail.com"
-          />
-          <AuthInput
-            label="Password"
-            value={password}
-            onChangeText={(v) => setPassword(v)}
-            placeholder="1234*#"
-            type="PASSWORD"
-          />
-          <AuthInput
-            label="Confirm Password"
-            value={confirmPassword}
-            onChangeText={(v) => setConfirmPassword(v)}
-            placeholder="1234*#"
-            type="PASSWORD"
-          />
-          <Pressable
-            onPress={handleSignUp}
-            style={({ pressed }) => [
-              { width: "100%", display: "flex", alignItems: "center" },
-              { opacity: pressed ? 0.8 : 1 },
-            ]}
-          >
-            <View style={styles.signUpButton}>
-              <Text style={styles.signUpButtonText}>Sign Up</Text>
-            </View>
-          </Pressable>
-          <Pressable
-            onPress={() => navigation.pop()}
-            style={({ pressed }) => [
-              { width: "100%", display: "flex", alignItems: "center" },
-              { opacity: pressed ? 0.8 : 1 },
-            ]}
-          >
-            <View style={styles.backButton}>
-              <Text style={styles.backButtonText}>Back</Text>
-            </View>
-          </Pressable>
-          <Toast
-            topOffset={20}
-            config={{}}
-          />
-        </View>
-      </KeyboardAwareScrollView>
-    </KeyboardDismissWrapper>
+    <KeyboardAwareScrollView
+      style={{ backgroundColor: "#fff" }}
+      extraHeight={80} // For Android
+      extraScrollHeight={80} // For IOS
+    >
+      <View style={styles.container}>
+        <AuthInput
+          label="Name"
+          value={name}
+          onChangeText={(v) => setName(v)}
+          placeholder="abc123"
+        />
+        <AuthInput
+          label="Email ID"
+          value={id}
+          onChangeText={(v) => setId(v)}
+          placeholder="abc123@gmail.com"
+        />
+        <AuthInput
+          label="Password"
+          value={password}
+          onChangeText={(v) => setPassword(v)}
+          placeholder="1234*#"
+          type="PASSWORD"
+        />
+        <AuthInput
+          label="Confirm Password"
+          value={confirmPassword}
+          onChangeText={(v) => setConfirmPassword(v)}
+          placeholder="1234*#"
+          type="PASSWORD"
+        />
+        <Pressable
+          onPress={handleSignUp}
+          style={({ pressed }) => [
+            { width: "100%", display: "flex", alignItems: "center" },
+            { opacity: pressed ? 0.8 : 1 },
+          ]}
+        >
+          <View style={styles.signUpButton}>
+            <Text style={styles.signUpButtonText}>Sign Up</Text>
+          </View>
+        </Pressable>
+        <Pressable
+          onPress={() => navigation.pop()}
+          style={({ pressed }) => [
+            { width: "100%", display: "flex", alignItems: "center" },
+            { opacity: pressed ? 0.8 : 1 },
+          ]}
+        >
+          <View style={styles.backButton}>
+            <Text style={styles.backButtonText}>Back</Text>
+          </View>
+        </Pressable>
+        <Toast
+          topOffset={20}
+          config={{}}
+        />
+      </View>
+    </KeyboardAwareScrollView>
   );
 }

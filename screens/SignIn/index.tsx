@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, Pressable, Keyboard } from "react-native";
+import {
+  Text,
+  View,
+  Pressable,
+  Keyboard,
+  GestureResponderEvent,
+} from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "firebaseConfig";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -25,12 +31,10 @@ type Props = {
 export default function LoginScreen({ navigation, route }: Props) {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  const [messageColor, setMessageColor] = useState("black");
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, id, password)
       .then((userCredential) => {
-        setMessageColor("green");
         navigation.replace("Home", {
           userName: userCredential.user.displayName ?? "NULL",
         });
@@ -55,55 +59,53 @@ export default function LoginScreen({ navigation, route }: Props) {
   }, []);
 
   return (
-    <KeyboardDismissWrapper>
-      <KeyboardAwareScrollView
-        contentContainerStyle={{
-          flex: 1,
-          justifyContent: "center",
-        }}
-        extraHeight={80} // For Android
-        extraScrollHeight={80} // For IOS
-      >
-        <View style={styles.container}>
-          <Text style={styles.title}>Sign In</Text>
-          <AuthInput
-            label="Email ID"
-            value={id}
-            onChangeText={(v) => setId(v)}
-            placeholder="abc123@gmail.com"
-          />
-          <AuthInput
-            label="Password"
-            value={password}
-            onChangeText={(v) => setPassword(v)}
-            placeholder="1234*#"
-            type="PASSWORD"
-          />
-          <Pressable
-            onPress={handleLogin}
-            style={({ pressed }) => [
-              { width: "100%", display: "flex", alignItems: "center" },
-              { opacity: pressed ? 0.8 : 1 },
-            ]}
-          >
-            <View style={styles.loginButton}>
-              <Text style={styles.loginButtonText}>Login</Text>
-            </View>
-          </Pressable>
-          <Pressable
-            onPress={() => navigation.navigate("SignUp")}
-            style={({ pressed }) => [
-              { width: "100%", display: "flex", alignItems: "center" },
-              { opacity: pressed ? 0.8 : 1 },
-            ]}
-          >
-            <View style={styles.signUpButton}>
-              <Text style={styles.signUpButtonText}>Sign Up</Text>
-            </View>
-          </Pressable>
-          <Toast topOffset={70} />
-        </View>
-      </KeyboardAwareScrollView>
-    </KeyboardDismissWrapper>
+    <KeyboardAwareScrollView
+      contentContainerStyle={{
+        flex: 1,
+        justifyContent: "center",
+      }}
+      extraHeight={80} // For Android
+      extraScrollHeight={80} // For IOS
+    >
+      <View style={styles.container}>
+        <Text style={styles.title}>Sign In</Text>
+        <AuthInput
+          label="Email ID"
+          value={id}
+          onChangeText={(v) => setId(v)}
+          placeholder="abc123@gmail.com"
+        />
+        <AuthInput
+          label="Password"
+          value={password}
+          onChangeText={(v) => setPassword(v)}
+          placeholder="1234*#"
+          type="PASSWORD"
+        />
+        <Pressable
+          onPress={handleLogin}
+          style={({ pressed }) => [
+            { width: "100%", display: "flex", alignItems: "center" },
+            { opacity: pressed ? 0.8 : 1 },
+          ]}
+        >
+          <View style={styles.loginButton}>
+            <Text style={styles.loginButtonText}>Login</Text>
+          </View>
+        </Pressable>
+        <Pressable
+          onPress={() => navigation.navigate("SignUp")}
+          style={({ pressed }) => [
+            { width: "100%", display: "flex", alignItems: "center" },
+            { opacity: pressed ? 0.8 : 1 },
+          ]}
+        >
+          <View style={styles.signUpButton}>
+            <Text style={styles.signUpButtonText}>Sign Up</Text>
+          </View>
+        </Pressable>
+        <Toast topOffset={70} />
+      </View>
+    </KeyboardAwareScrollView>
   );
 }

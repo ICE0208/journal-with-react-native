@@ -30,7 +30,6 @@ type Props = {
 };
 
 export default function HomeScreen({ navigation, route }: Props) {
-  const [memo, setMemo] = useState("");
   const [memos, setMemos] = useState<string[]>([]);
   const { userName } = route.params;
   const unsubscribe = useRef<Unsubscribe>(() => {});
@@ -63,6 +62,7 @@ export default function HomeScreen({ navigation, route }: Props) {
     <View style={styles.container}>
       <SafeAreaView style={isScrollDown && { backgroundColor: "#45379f" }}>
         <Text style={styles.screenTitle}>일기</Text>
+        <Text style={styles.welcomeText}>Hello, {userName}</Text>
       </SafeAreaView>
       <ScrollView
         contentContainerStyle={styles.memosContainer}

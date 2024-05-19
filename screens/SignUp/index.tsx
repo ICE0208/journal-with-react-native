@@ -27,6 +27,10 @@ export default function SignUpScreen({ navigation }: Props) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // Password 입력이 끝났을 때 password와 confirmPassword가 리렌더링 되도록하는 Key 상태값
+  // 리렌더링 이유: IOS 비밀번호 제안 때문에 발생하는 입력 문제
+  const [dateKey, setDateKey] = useState(Date.now());
+
   const handleSignUp = () => {
     if (isLoading) return;
     setIsLoading(true);
@@ -114,13 +118,22 @@ export default function SignUpScreen({ navigation }: Props) {
           placeholder="abc123@gmail.com"
         />
         <AuthInput
+          key={dateKey + "-password"}
           label="Password"
           value={password}
           onChangeText={(v) => setPassword(v)}
           placeholder="1234*#"
           type="PASSWORD"
+          onEndEditing={(e) => {
+            setPassword(e.nativeEvent.text);
+            setDateKey(Date.now());
+            if (confirmPassword !== e.nativeEvent.text) {
+              setConfirmPassword("");
+            }
+          }}
         />
         <AuthInput
+          key={dateKey + "-confirmPassword"}
           label="Confirm Password"
           value={confirmPassword}
           onChangeText={(v) => setConfirmPassword(v)}

@@ -10,6 +10,7 @@ import Toast from "react-native-toast-message";
 import { RouteProp } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { FirebaseError } from "firebase/app";
+import { validateId, validatePassword } from "utils/validateData";
 
 type SignInScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -30,6 +31,26 @@ export default function LoginScreen({ navigation, route }: Props) {
   const handleLogin = () => {
     if (isLoading) return;
     setIsLoading(true);
+
+    const idValidateResponse = validateId(id);
+    if (idValidateResponse.ok === false) {
+      Toast.show({
+        type: "error",
+        text1: "로그인 실패",
+        text2: idValidateResponse.msg,
+      });
+      return setIsLoading(false);
+    }
+
+    const passwordValidateResponse = validatePassword(password);
+    if (passwordValidateResponse.ok === false) {
+      Toast.show({
+        type: "error",
+        text1: "로그인 실패",
+        text2: passwordValidateResponse.msg,
+      });
+      return setIsLoading(false);
+    }
 
     signInWithEmailAndPassword(auth, id, password)
       .then((userCredential) => {

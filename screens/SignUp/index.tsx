@@ -9,6 +9,7 @@ import AuthInput from "components/AuthInput";
 import Toast from "react-native-toast-message";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { FirebaseError } from "firebase/app";
+import { validateId, validateName, validatePassword } from "utils/validateData";
 
 type SignUpScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -30,13 +31,43 @@ export default function SignUpScreen({ navigation }: Props) {
     if (isLoading) return;
     setIsLoading(true);
 
+    const nameValidateResponse = validateName(name);
+    if (nameValidateResponse.ok === false) {
+      Toast.show({
+        type: "error",
+        text1: "회원가입 실패",
+        text2: nameValidateResponse.msg,
+      });
+      return setIsLoading(false);
+    }
+
+    const idValidateResponse = validateId(id);
+    if (idValidateResponse.ok === false) {
+      Toast.show({
+        type: "error",
+        text1: "회원가입 실패",
+        text2: idValidateResponse.msg,
+      });
+      return setIsLoading(false);
+    }
+
+    const passwordValidateResponse = validatePassword(password);
+    if (passwordValidateResponse.ok === false) {
+      Toast.show({
+        type: "error",
+        text1: "회원가입 실패",
+        text2: passwordValidateResponse.msg,
+      });
+      return setIsLoading(false);
+    }
+
     if (password !== confirmPassword) {
       Toast.show({
         type: "error",
         text1: "비밀번호 불일치",
-        text2: "비밀번호와 비밀번호 확인을 같게 해주세요.",
+        text2: "비밀번호와 비밀번호 확인이 일치하지 않습니다.",
       });
-      return;
+      return setIsLoading(false);
     }
 
     createUserWithEmailAndPassword(auth, id, password)

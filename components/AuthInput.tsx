@@ -1,5 +1,11 @@
 import React from "react";
-import { StyleSheet, Text } from "react-native";
+import {
+  NativeSyntheticEvent,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInputEndEditingEventData,
+} from "react-native";
 import { TextInput, View } from "react-native";
 
 interface Props {
@@ -8,6 +14,9 @@ interface Props {
   onChangeText: (text: string) => void;
   placeholder?: string;
   type?: "TEXT" | "PASSWORD";
+  onEndEditing?: (
+    e: NativeSyntheticEvent<TextInputEndEditingEventData>
+  ) => void;
 }
 
 export default function AuthInput({
@@ -16,6 +25,7 @@ export default function AuthInput({
   onChangeText,
   placeholder = "",
   type = "TEXT",
+  onEndEditing,
 }: Props) {
   return (
     <View style={styles.inputView}>
@@ -24,7 +34,15 @@ export default function AuthInput({
         style={styles.input}
         value={value}
         onChangeText={onChangeText}
+        // 애플의 강력한 암호 제안을 취소했을 때
+        // onChangeText가 트리거 되지 않는 문제때문에 onEndEditing으로 임시 해결
+        onEndEditing={onEndEditing}
         secureTextEntry={type === "PASSWORD"}
+        onFocus={() => {
+          if (type === "PASSWORD" && Platform.OS === "ios") {
+            onChangeText("");
+          }
+        }}
         placeholder={placeholder}
       />
     </View>

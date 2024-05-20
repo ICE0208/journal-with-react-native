@@ -1,12 +1,13 @@
 import React, { useState, useLayoutEffect, useRef, useEffect } from "react";
 import {
+  Button,
   NativeScrollEvent,
   NativeSyntheticEvent,
   SafeAreaView,
   Text,
   View,
 } from "react-native";
-import { RouteProp } from "@react-navigation/native";
+import { CommonActions, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
 import {
@@ -24,6 +25,7 @@ import Toast from "react-native-toast-message";
 import Journals from "components/Journals";
 import NewJournalBtn from "components/NewJournalBtn";
 import { JournalDatas } from "@myTypes/JournalDatas";
+import { signOut } from "firebase/auth";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, "Home">;
@@ -97,11 +99,36 @@ export default function HomeScreen({ navigation, route }: Props) {
     setIsScrollDown(e.nativeEvent.contentOffset.y > 0);
   };
 
+  const handleLogoutBtn = async () => {
+    try {
+      // 일기 데이터 구독 해제
+      if (unsubscribe.current) {
+        unsubscribe.current();
+      }
+      // 로그아웃 처리
+      await signOut(auth);
+      // 모든 네비게이션을 SignIn 페이지 하나로 초기화하기
+      const targetScreenName: keyof RootStackParamList = "SignIn";
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: targetScreenName }],
+        })
+      );
+    } catch (error) {
+      console.error("Failed to log out:", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={isScrollDown && { backgroundColor: "#45379f" }}>
         <Text style={styles.screenTitle}>일기</Text>
         <Text style={styles.welcomeText}>Hello, {userName}</Text>
+        <Button
+          title="logout"
+          onPress={handleLogoutBtn}
+        />
       </SafeAreaView>
       <Journals
         isLoading={isLoading}

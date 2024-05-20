@@ -26,11 +26,26 @@ type Props = {
 export default function LoginScreen({ navigation, route }: Props) {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isInitLoading, setIsInitLoading] = useState(true);
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+
+  // console.log(auth.currentUser);
+
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      // 로그인 된 상태일 경우
+      navigation.replace("Home", {
+        userName: user.displayName ?? "NULL",
+      });
+    } else {
+      // 로그아웃 된 상태일 경우
+      setIsInitLoading(false);
+    }
+  });
 
   const handleLogin = () => {
-    if (isLoading) return;
-    setIsLoading(true);
+    if (isSubmitLoading) return;
+    setIsSubmitLoading(true);
 
     const idValidateResponse = validateId(id);
     if (idValidateResponse.ok === false) {
@@ -39,7 +54,7 @@ export default function LoginScreen({ navigation, route }: Props) {
         text1: "로그인 실패",
         text2: idValidateResponse.msg,
       });
-      return setIsLoading(false);
+      return setIsSubmitLoading(false);
     }
 
     const passwordValidateResponse = validatePassword(password);
@@ -49,7 +64,7 @@ export default function LoginScreen({ navigation, route }: Props) {
         text1: "로그인 실패",
         text2: passwordValidateResponse.msg,
       });
-      return setIsLoading(false);
+      return setIsSubmitLoading(false);
     }
 
     signInWithEmailAndPassword(auth, id, password)
@@ -69,7 +84,7 @@ export default function LoginScreen({ navigation, route }: Props) {
           text2,
         });
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => setIsSubmitLoading(false));
   };
 
   useEffect(() => {
@@ -83,55 +98,65 @@ export default function LoginScreen({ navigation, route }: Props) {
   }, []);
 
   return (
-    <KeyboardAwareScrollView
-      contentContainerStyle={{
-        flex: 1,
-        justifyContent: "center",
-      }}
-      extraHeight={80} // For Android
-      extraScrollHeight={80} // For IOS
-    >
-      <View style={styles.container}>
-        <Text style={styles.title}>Sign In</Text>
-        <AuthInput
-          label="Email ID"
-          value={id}
-          onChangeText={(v) => setId(v)}
-          placeholder="abc123@gmail.com"
-        />
-        <AuthInput
-          label="Password"
-          value={password}
-          onChangeText={(v) => setPassword(v)}
-          placeholder="1234*#"
-          type="PASSWORD"
-        />
-        <Pressable
-          onPress={handleLogin}
-          style={({ pressed }) => [
-            { width: "100%", display: "flex", alignItems: "center" },
-            { opacity: pressed ? 0.8 : 1 },
-          ]}
+    <>
+      {isInitLoading ? (
+        <View
+          style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
         >
-          <View style={styles.loginButton}>
-            <Text style={styles.loginButtonText}>
-              {isLoading ? "Loading..." : "Login"}
-            </Text>
-          </View>
-        </Pressable>
-        <Pressable
-          onPress={() => navigation.navigate("SignUp")}
-          style={({ pressed }) => [
-            { width: "100%", display: "flex", alignItems: "center" },
-            { opacity: pressed ? 0.8 : 1 },
-          ]}
+          <Text style={{ fontSize: 32, fontWeight: "bold" }}>Loading...</Text>
+        </View>
+      ) : (
+        <KeyboardAwareScrollView
+          contentContainerStyle={{
+            flex: 1,
+            justifyContent: "center",
+          }}
+          extraHeight={80} // For Android
+          extraScrollHeight={80} // For IOS
         >
-          <View style={styles.signUpButton}>
-            <Text style={styles.signUpButtonText}>Sign Up</Text>
+          <View style={styles.container}>
+            <Text style={styles.title}>Sign In</Text>
+            <AuthInput
+              label="Email ID"
+              value={id}
+              onChangeText={(v) => setId(v)}
+              placeholder="abc123@gmail.com"
+            />
+            <AuthInput
+              label="Password"
+              value={password}
+              onChangeText={(v) => setPassword(v)}
+              placeholder="1234*#"
+              type="PASSWORD"
+            />
+            <Pressable
+              onPress={handleLogin}
+              style={({ pressed }) => [
+                { width: "100%", display: "flex", alignItems: "center" },
+                { opacity: pressed ? 0.8 : 1 },
+              ]}
+            >
+              <View style={styles.loginButton}>
+                <Text style={styles.loginButtonText}>
+                  {isSubmitLoading ? "Loading..." : "Login"}
+                </Text>
+              </View>
+            </Pressable>
+            <Pressable
+              onPress={() => navigation.navigate("SignUp")}
+              style={({ pressed }) => [
+                { width: "100%", display: "flex", alignItems: "center" },
+                { opacity: pressed ? 0.8 : 1 },
+              ]}
+            >
+              <View style={styles.signUpButton}>
+                <Text style={styles.signUpButtonText}>Sign Up</Text>
+              </View>
+            </Pressable>
+            <Toast topOffset={70} />
           </View>
-        </Pressable>
-        <Toast topOffset={70} />
-      </View>
-    </KeyboardAwareScrollView>
+        </KeyboardAwareScrollView>
+      )}
+    </>
   );
 }

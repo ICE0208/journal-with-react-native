@@ -22,9 +22,10 @@ import Toast from "react-native-toast-message";
 import Journals from "components/Journals";
 import NewJournalBtn from "components/NewJournalBtn";
 import { JournalDatas } from "@myTypes/JournalDatas";
-import UserButtn from "components/UserButton";
 import { useFirestoreSub } from "hooks/useFirestoreSub";
 import { StatusBar } from "expo-status-bar";
+import SvgButton from "components/SvgButton";
+import UserSvg from "assets/svgs/UserSvg";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, "Home">;
@@ -109,13 +110,16 @@ export default function HomeScreen({ navigation, route }: Props) {
               <Text style={styles.screenTitle}>일기</Text>
               <Text style={styles.welcomeText}>Hello, {userName}</Text>
             </View>
-            <UserButtn
+            <SvgButton
               size={40}
-              onPress={() =>
+              onPress={() => {
+                if (isLoading) return;
                 navigation.navigate("User", {
                   userName,
-                })
-              }
+                  journalCount: datas.length,
+                });
+              }}
+              SvgComponent={UserSvg}
             />
           </View>
         </SafeAreaView>

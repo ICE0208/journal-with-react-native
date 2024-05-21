@@ -9,7 +9,6 @@ import NewScreen from "@screens/New";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import EditScreen from "@screens/Edit";
 import UserScreen from "@screens/User";
-import { Unsubscribe } from "firebase/firestore";
 import FirestoreSubProvider from "components/FirestoreSubProvider";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

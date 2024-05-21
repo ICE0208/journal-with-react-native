@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { CommonActions, RouteProp } from "@react-navigation/native";
+import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
 import {

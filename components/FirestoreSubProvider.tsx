@@ -1,5 +1,5 @@
 import { Unsubscribe } from "firebase/auth";
-import { createContext, useContext, useRef, useState } from "react";
+import { createContext, useRef } from "react";
 
 export const FirestoreSubContext = createContext<{
   unSubscribe: () => void;

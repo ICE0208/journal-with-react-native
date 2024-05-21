@@ -1,6 +1,5 @@
-import React, { useState, useLayoutEffect, useRef, useEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import {
-  Button,
   NativeScrollEvent,
   NativeSyntheticEvent,
   SafeAreaView,
@@ -15,8 +14,6 @@ import {
   onSnapshot,
   query,
   orderBy,
-  Unsubscribe,
-  Timestamp,
   getDocs,
 } from "firebase/firestore";
 import { auth, db } from "firebaseConfig";
@@ -25,7 +22,8 @@ import Toast from "react-native-toast-message";
 import Journals from "components/Journals";
 import NewJournalBtn from "components/NewJournalBtn";
 import { JournalDatas } from "@myTypes/JournalDatas";
-import { signOut } from "firebase/auth";
+import UserButtn from "components/UserButton";
+import { useFirestoreSub } from "hooks/useFirestoreSub";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, "Home">;
@@ -38,9 +36,9 @@ type Props = {
 export default function HomeScreen({ navigation, route }: Props) {
   const [datas, setDatas] = useState<JournalDatas>([]);
   const { userName } = route.params;
-  const unsubscribe = useRef<Unsubscribe>(() => {});
   const [isScrollDown, setIsScrollDown] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { setUnSubscribe } = useFirestoreSub();
 
   const getInitDatas = async () => {
     const initDocs = await getDocs(
@@ -69,7 +67,7 @@ export default function HomeScreen({ navigation, route }: Props) {
 
     getInitDatas();
 
-    unsubscribe.current = onSnapshot(
+    const unSubscribe = onSnapshot(
       query(
         collection(db, "users", auth.currentUser!.uid, "memos"),
         orderBy("createdAt", "desc")
@@ -84,7 +82,8 @@ export default function HomeScreen({ navigation, route }: Props) {
         setDatas(updatedDatas);
       }
     );
-    return () => unsubscribe.current();
+    setUnSubscribe(unSubscribe);
+    return () => unSubscribe();
   }, []);
 
   useEffect(() => {
@@ -99,36 +98,23 @@ export default function HomeScreen({ navigation, route }: Props) {
     setIsScrollDown(e.nativeEvent.contentOffset.y > 0);
   };
 
-  const handleLogoutBtn = async () => {
-    try {
-      // 일기 데이터 구독 해제
-      if (unsubscribe.current) {
-        unsubscribe.current();
-      }
-      // 로그아웃 처리
-      await signOut(auth);
-      // 모든 네비게이션을 SignIn 페이지 하나로 초기화하기
-      const targetScreenName: keyof RootStackParamList = "SignIn";
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: targetScreenName }],
-        })
-      );
-    } catch (error) {
-      console.error("Failed to log out:", error);
-    }
-  };
-
   return (
     <View style={styles.container}>
       <SafeAreaView style={isScrollDown && { backgroundColor: "#45379f" }}>
-        <Text style={styles.screenTitle}>일기</Text>
-        <Text style={styles.welcomeText}>Hello, {userName}</Text>
-        <Button
-          title="logout"
-          onPress={handleLogoutBtn}
-        />
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.screenTitle}>일기</Text>
+            <Text style={styles.welcomeText}>Hello, {userName}</Text>
+          </View>
+          <UserButtn
+            size={40}
+            onPress={() =>
+              navigation.navigate("User", {
+                userName,
+              })
+            }
+          />
+        </View>
       </SafeAreaView>
       <Journals
         isLoading={isLoading}

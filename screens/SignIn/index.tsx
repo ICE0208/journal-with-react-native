@@ -29,19 +29,21 @@ export default function LoginScreen({ navigation, route }: Props) {
   const [isInitLoading, setIsInitLoading] = useState(true);
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
 
-  // console.log(auth.currentUser);
+  useEffect(() => {
+    const unSubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        // 로그인 된 상태일 경우
+        navigation.replace("Home", {
+          userName: user.displayName ?? "NULL",
+        });
+      } else {
+        // 로그아웃 된 상태일 경우
+        setIsInitLoading(false);
+      }
+    });
 
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      // 로그인 된 상태일 경우
-      navigation.replace("Home", {
-        userName: user.displayName ?? "NULL",
-      });
-    } else {
-      // 로그아웃 된 상태일 경우
-      setIsInitLoading(false);
-    }
-  });
+    return () => unSubscribe();
+  }, []);
 
   const handleLogin = () => {
     if (isSubmitLoading) return;

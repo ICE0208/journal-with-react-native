@@ -24,6 +24,7 @@ import NewJournalBtn from "components/NewJournalBtn";
 import { JournalDatas } from "@myTypes/JournalDatas";
 import UserButtn from "components/UserButton";
 import { useFirestoreSub } from "hooks/useFirestoreSub";
+import { StatusBar } from "expo-status-bar";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, "Home">;
@@ -99,30 +100,33 @@ export default function HomeScreen({ navigation, route }: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={isScrollDown && { backgroundColor: "#45379f" }}>
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.screenTitle}>일기</Text>
-            <Text style={styles.welcomeText}>Hello, {userName}</Text>
+    <>
+      <StatusBar style="light" />
+      <View style={styles.container}>
+        <SafeAreaView style={isScrollDown && { backgroundColor: "#45379f" }}>
+          <View style={styles.header}>
+            <View>
+              <Text style={styles.screenTitle}>일기</Text>
+              <Text style={styles.welcomeText}>Hello, {userName}</Text>
+            </View>
+            <UserButtn
+              size={40}
+              onPress={() =>
+                navigation.navigate("User", {
+                  userName,
+                })
+              }
+            />
           </View>
-          <UserButtn
-            size={40}
-            onPress={() =>
-              navigation.navigate("User", {
-                userName,
-              })
-            }
-          />
-        </View>
-      </SafeAreaView>
-      <Journals
-        isLoading={isLoading}
-        datas={datas}
-        onScroll={handleScroll}
-      />
-      <NewJournalBtn onPress={() => navigation.navigate("New")} />
-      <Toast topOffset={70} />
-    </View>
+        </SafeAreaView>
+        <Journals
+          isLoading={isLoading}
+          datas={datas}
+          onScroll={handleScroll}
+        />
+        <NewJournalBtn onPress={() => navigation.navigate("New")} />
+        <Toast topOffset={70} />
+      </View>
+    </>
   );
 }

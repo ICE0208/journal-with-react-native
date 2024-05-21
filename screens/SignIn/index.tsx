@@ -111,6 +111,7 @@ export default function LoginScreen({ navigation, route }: Props) {
 
   return (
     <>
+      <StatusBar style="dark" />
       {firstLoaded && isInitLoading ? (
         <View
           style={{ justifyContent: "center", alignItems: "center", flex: 1 }}

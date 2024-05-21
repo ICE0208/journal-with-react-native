@@ -14,6 +14,7 @@ import Toast from "react-native-toast-message";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { FirebaseError } from "firebase/app";
 import { validateId, validateName, validatePassword } from "utils/validateData";
+import { StatusBar } from "expo-status-bar";
 
 type SignUpScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -104,76 +105,79 @@ export default function SignUpScreen({ navigation }: Props) {
   };
 
   return (
-    <KeyboardAwareScrollView
-      style={{ backgroundColor: "#fff" }}
-      extraHeight={80} // For Android
-      extraScrollHeight={80} // For IOS
-    >
-      <View style={styles.container}>
-        <AuthInput
-          label="Name"
-          value={name}
-          onChangeText={(v) => setName(v)}
-          placeholder="abc123"
-        />
-        <AuthInput
-          label="Email ID"
-          value={id}
-          onChangeText={(v) => setId(v)}
-          placeholder="abc123@gmail.com"
-        />
-        <AuthInput
-          key={dateKey + "-password"}
-          label="Password"
-          value={password}
-          onChangeText={(v) => setPassword(v)}
-          placeholder="1234*#"
-          type="PASSWORD"
-          onEndEditing={(e) => {
-            setPassword(e.nativeEvent.text);
-            setDateKey(Date.now());
-            if (confirmPassword !== e.nativeEvent.text) {
-              setConfirmPassword("");
-            }
-          }}
-        />
-        <AuthInput
-          key={dateKey + "-confirmPassword"}
-          label="Confirm Password"
-          value={confirmPassword}
-          onChangeText={(v) => setConfirmPassword(v)}
-          placeholder="1234*#"
-          type="PASSWORD"
-        />
-        <Pressable
-          onPress={handleSignUp}
-          style={({ pressed }) => [
-            { width: "100%", display: "flex", alignItems: "center" },
-            { opacity: pressed ? 0.8 : 1 },
-          ]}
-        >
-          <View style={styles.signUpButton}>
-            <Text style={styles.signUpButtonText}>
-              {isLoading ? "Loading..." : "Sign Up"}
-            </Text>
-          </View>
-        </Pressable>
-        <Pressable
-          onPress={() => navigation.pop()}
-          style={({ pressed }) => [
-            { width: "100%", display: "flex", alignItems: "center" },
-            { opacity: pressed ? 0.8 : 1 },
-          ]}
-        >
-          <View style={styles.backButton}>
-            <Text style={styles.backButtonText}>Back</Text>
-          </View>
-        </Pressable>
-        <Toast
-          topOffset={20}
-          config={{}}
-        />
-      </View>
-    </KeyboardAwareScrollView>
+    <>
+      <StatusBar style="light" />
+      <KeyboardAwareScrollView
+        style={{ backgroundColor: "#fff" }}
+        extraHeight={80} // For Android
+        extraScrollHeight={80} // For IOS
+      >
+        <View style={styles.container}>
+          <AuthInput
+            label="Name"
+            value={name}
+            onChangeText={(v) => setName(v)}
+            placeholder="abc123"
+          />
+          <AuthInput
+            label="Email ID"
+            value={id}
+            onChangeText={(v) => setId(v)}
+            placeholder="abc123@gmail.com"
+          />
+          <AuthInput
+            key={dateKey + "-password"}
+            label="Password"
+            value={password}
+            onChangeText={(v) => setPassword(v)}
+            placeholder="1234*#"
+            type="PASSWORD"
+            onEndEditing={(e) => {
+              setPassword(e.nativeEvent.text);
+              setDateKey(Date.now());
+              if (confirmPassword !== e.nativeEvent.text) {
+                setConfirmPassword("");
+              }
+            }}
+          />
+          <AuthInput
+            key={dateKey + "-confirmPassword"}
+            label="Confirm Password"
+            value={confirmPassword}
+            onChangeText={(v) => setConfirmPassword(v)}
+            placeholder="1234*#"
+            type="PASSWORD"
+          />
+          <Pressable
+            onPress={handleSignUp}
+            style={({ pressed }) => [
+              { width: "100%", display: "flex", alignItems: "center" },
+              { opacity: pressed ? 0.8 : 1 },
+            ]}
+          >
+            <View style={styles.signUpButton}>
+              <Text style={styles.signUpButtonText}>
+                {isLoading ? "Loading..." : "Sign Up"}
+              </Text>
+            </View>
+          </Pressable>
+          <Pressable
+            onPress={() => navigation.pop()}
+            style={({ pressed }) => [
+              { width: "100%", display: "flex", alignItems: "center" },
+              { opacity: pressed ? 0.8 : 1 },
+            ]}
+          >
+            <View style={styles.backButton}>
+              <Text style={styles.backButtonText}>Back</Text>
+            </View>
+          </Pressable>
+          <Toast
+            topOffset={20}
+            config={{}}
+          />
+        </View>
+      </KeyboardAwareScrollView>
+    </>
   );
 }

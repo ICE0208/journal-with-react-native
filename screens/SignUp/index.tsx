@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Text, View, Pressable } from "react-native";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
 import { auth } from "firebaseConfig";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
@@ -81,6 +85,7 @@ export default function SignUpScreen({ navigation }: Props) {
           displayName: name,
         });
       })
+      .then(() => signOut(auth))
       .then(() => {
         navigation.replace("SignIn", { signUpSuccess: true });
       })

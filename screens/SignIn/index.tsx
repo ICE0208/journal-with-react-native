@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Text, View, Pressable } from "react-native";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { Unsubscribe, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "firebaseConfig";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
@@ -11,6 +11,7 @@ import { RouteProp } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { FirebaseError } from "firebase/app";
 import { validateId, validatePassword } from "utils/validateData";
+import { StatusBar } from "expo-status-bar";
 
 type SignInScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -23,6 +24,8 @@ type Props = {
   route: SignInScreenRouteProp;
 };
 
+let firstLoaded = true;
+
 export default function LoginScreen({ navigation, route }: Props) {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -30,19 +33,26 @@ export default function LoginScreen({ navigation, route }: Props) {
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
 
   useEffect(() => {
-    const unSubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        // 로그인 된 상태일 경우
-        navigation.replace("Home", {
-          userName: user.displayName ?? "NULL",
-        });
-      } else {
-        // 로그아웃 된 상태일 경우
-        setIsInitLoading(false);
-      }
-    });
+    let unSubscribe: Unsubscribe | null = null;
+    if (firstLoaded) {
+      firstLoaded = false;
+      unSubscribe = auth.onAuthStateChanged((user) => {
+        if (unSubscribe) unSubscribe();
+        if (user) {
+          // 로그인 된 상태일 경우
+          navigation.replace("Home", {
+            userName: user.displayName ?? "NULL",
+          });
+        } else {
+          // 로그아웃 된 상태일 경우
+          setIsInitLoading(false);
+        }
+      });
+    }
 
-    return () => unSubscribe();
+    return () => {
+      if (unSubscribe) unSubscribe();
+    };
   }, []);
 
   const handleLogin = () => {
@@ -101,7 +111,7 @@ export default function LoginScreen({ navigation, route }: Props) {
 
   return (
     <>
-      {isInitLoading ? (
+      {firstLoaded && isInitLoading ? (
         <View
           style={{ justifyContent: "center", alignItems: "center", flex: 1 }}
         >

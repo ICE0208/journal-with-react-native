@@ -148,30 +148,36 @@ export default function SignUpScreen({ navigation }: Props) {
             placeholder="1234*#"
             type="PASSWORD"
           />
-          <Pressable
-            onPress={handleSignUp}
-            style={({ pressed }) => [
-              { width: "100%", display: "flex", alignItems: "center" },
-              { opacity: pressed ? 0.8 : 1 },
-            ]}
+          <View
+            style={{ width: "100%", display: "flex", alignItems: "center" }}
           >
-            <View style={styles.signUpButton}>
+            <Pressable
+              onPress={handleSignUp}
+              hitSlop={5}
+              style={({ pressed }) => [
+                { opacity: pressed ? 0.8 : 1 },
+                styles.signUpButton,
+              ]}
+            >
               <Text style={styles.signUpButtonText}>
                 {isLoading ? "Loading..." : "Sign Up"}
               </Text>
-            </View>
-          </Pressable>
-          <Pressable
-            onPress={() => navigation.pop()}
-            style={({ pressed }) => [
-              { width: "100%", display: "flex", alignItems: "center" },
-              { opacity: pressed ? 0.8 : 1 },
-            ]}
+            </Pressable>
+          </View>
+          <View
+            style={{ width: "100%", display: "flex", alignItems: "center" }}
           >
-            <View style={styles.backButton}>
+            <Pressable
+              onPress={() => navigation.pop()}
+              hitSlop={5}
+              style={({ pressed }) => [
+                { opacity: pressed ? 0.5 : 1 },
+                styles.backButton,
+              ]}
+            >
               <Text style={styles.backButtonText}>Back</Text>
-            </View>
-          </Pressable>
+            </Pressable>
+          </View>
           <Toast
             topOffset={20}
             config={{}}

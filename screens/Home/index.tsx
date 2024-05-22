@@ -112,6 +112,7 @@ export default function HomeScreen({ navigation, route }: Props) {
             </View>
             <SvgButton
               size={40}
+              hitSlop={12}
               onPress={() => {
                 if (isLoading) return;
                 navigation.navigate("User", {

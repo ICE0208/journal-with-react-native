@@ -29,6 +29,7 @@ export default function ModalHeader({ left, right, center }: Props) {
     >
       <Pressable
         onPress={left.onPress}
+        hitSlop={12}
         style={({ pressed }) => [
           {
             position: "absolute",
@@ -57,6 +58,7 @@ export default function ModalHeader({ left, right, center }: Props) {
         {center.text}
       </Text>
       <Pressable
+        hitSlop={12}
         onPress={right.onPress}
         style={({ pressed }) => [
           {

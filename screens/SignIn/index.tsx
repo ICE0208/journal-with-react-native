@@ -142,30 +142,44 @@ export default function LoginScreen({ navigation, route }: Props) {
               placeholder="1234*#"
               type="PASSWORD"
             />
-            <Pressable
-              onPress={handleLogin}
-              style={({ pressed }) => [
-                { width: "100%", display: "flex", alignItems: "center" },
-                { opacity: pressed ? 0.8 : 1 },
-              ]}
+            <View
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+              }}
             >
-              <View style={styles.loginButton}>
+              <Pressable
+                onPress={handleLogin}
+                hitSlop={5}
+                style={({ pressed }) => [
+                  { opacity: pressed ? 0.8 : 1 },
+                  styles.loginButton,
+                ]}
+              >
                 <Text style={styles.loginButtonText}>
                   {isSubmitLoading ? "Loading..." : "Login"}
                 </Text>
-              </View>
-            </Pressable>
-            <Pressable
-              onPress={() => navigation.navigate("SignUp")}
-              style={({ pressed }) => [
-                { width: "100%", display: "flex", alignItems: "center" },
-                { opacity: pressed ? 0.8 : 1 },
-              ]}
+              </Pressable>
+            </View>
+            <View
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+              }}
             >
-              <View style={styles.signUpButton}>
+              <Pressable
+                onPress={() => navigation.navigate("SignUp")}
+                hitSlop={5}
+                style={({ pressed }) => [
+                  { opacity: pressed ? 0.5 : 1 },
+                  styles.signUpButton,
+                ]}
+              >
                 <Text style={styles.signUpButtonText}>Sign Up</Text>
-              </View>
-            </Pressable>
+              </Pressable>
+            </View>
             <Toast topOffset={70} />
           </View>
         </KeyboardAwareScrollView>

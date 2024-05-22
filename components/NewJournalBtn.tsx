@@ -16,6 +16,7 @@ export default function NewJournalBtn({ onPress }: Props) {
     >
       <Pressable
         onPress={onPress}
+        hitSlop={10}
         style={({ pressed }) => [
           {
             backgroundColor: "royalblue",

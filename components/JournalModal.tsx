@@ -97,12 +97,14 @@ export default function JournalModal({
           style={[styles.menu, { top: modalPosition.y, left: modalPosition.x }]}
         >
           <TouchableOpacity
+            hitSlop={{ top: 8, left: 30, right: 30, bottom: 2 }}
             style={styles.menuButton}
             onPress={handleEdit}
           >
             <Text style={styles.editButtonText}>편집</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            hitSlop={{ bottom: 8, left: 30, right: 30, top: 2 }}
             style={styles.menuButton}
             onPress={() => handleDelete(journalId)}
           >

@@ -64,6 +64,7 @@ export default function UserScreen({ navigation, route }: Props) {
             </Text>
             <View style={{ position: "absolute", left: 0 }}>
               <SvgButton
+                hitSlop={16}
                 SvgComponent={BackSvg}
                 onPress={() => navigation.pop()}
               />
@@ -123,20 +124,21 @@ export default function UserScreen({ navigation, route }: Props) {
               flexDirection: "row",
             }}
           >
-            <Pressable
-              style={({ pressed }) => [
-                { width: "100%", display: "flex", alignItems: "center" },
-                { opacity: pressed ? 0.8 : 1 },
-              ]}
-              onPress={handleLogoutBtn}
+            <View
+              style={{ width: "100%", display: "flex", alignItems: "center" }}
             >
-              <View
-                style={{
-                  width: "50%",
-                  backgroundColor: "white",
-                  borderRadius: 20,
-                  margin: 12,
-                }}
+              <Pressable
+                onPress={handleLogoutBtn}
+                hitSlop={8}
+                style={({ pressed }) => [
+                  { opacity: pressed ? 0.8 : 1 },
+                  {
+                    width: "50%",
+                    backgroundColor: "white",
+                    borderRadius: 20,
+                    margin: 12,
+                  },
+                ]}
               >
                 <Text
                   style={{
@@ -151,8 +153,8 @@ export default function UserScreen({ navigation, route }: Props) {
                 >
                   LogOut
                 </Text>
-              </View>
-            </Pressable>
+              </Pressable>
+            </View>
           </SafeAreaView>
         </View>
       </View>

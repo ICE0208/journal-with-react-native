@@ -56,6 +56,7 @@ export default function Journal({ textData, id, createdAt }: Props) {
               <Pressable
                 ref={buttonRef}
                 onPress={showMenu}
+                hitSlop={{ top: 4, bottom: 4, left: 16, right: 16 }}
               >
                 <Text style={styles.showMenuText}>···</Text>
               </Pressable>
@@ -82,6 +83,7 @@ export default function Journal({ textData, id, createdAt }: Props) {
             <Pressable
               ref={buttonRef}
               onPress={showMenu}
+              hitSlop={{ top: 4, bottom: 4, left: 16, right: 16 }}
             >
               <Text style={styles.showMenuText}>···</Text>
             </Pressable>
@@ -127,6 +129,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    position: "relative",
   },
   dateText: {
     fontSize: 14,
@@ -138,8 +141,6 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     fontSize: 20,
     paddingVertical: 5,
-    paddingLeft: 12,
-    paddingRight: 4,
   },
   menu: {
     position: "absolute",

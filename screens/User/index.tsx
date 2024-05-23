@@ -3,6 +3,7 @@ import { CommonActions, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import BackSvg from "assets/svgs/BackSvg";
 import UserSvg from "assets/svgs/UserSvg";
+import DateGrid from "components/DataGrid";
 import SvgButton from "components/SvgButton";
 import { StatusBar } from "expo-status-bar";
 import { signOut } from "firebase/auth";
@@ -20,7 +21,7 @@ type Props = {
 };
 
 export default function UserScreen({ navigation, route }: Props) {
-  const { userName, journalCount } = route.params;
+  const { userName, journalData } = route.params;
   const { unSubscribe } = useFirestoreSub();
 
   const handleLogoutBtn = async () => {
@@ -83,7 +84,7 @@ export default function UserScreen({ navigation, route }: Props) {
             style={{
               width: 80,
               height: 80,
-              marginTop: 40,
+              marginTop: 20,
               backgroundColor: "#f3f3f345",
               borderRadius: 40,
               overflow: "hidden",
@@ -110,9 +111,12 @@ export default function UserScreen({ navigation, route }: Props) {
             }}
           >
             <Text style={{ color: "white", fontSize: 20, fontWeight: "700" }}>
-              {`작성한 일기 : ${journalCount}개`}
+              {`작성한 일기 : ${journalData.length}개`}
             </Text>
           </View>
+          {/* 일기 잔디 */}
+          <View style={{ marginVertical: 14 }} />
+          <DateGrid journalData={journalData} />
           {/* 공백 */}
           <View style={{ flexGrow: 1 }} />
           {/* 로그아웃 버튼 */}

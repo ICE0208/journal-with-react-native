@@ -1,3 +1,4 @@
+import { JournalDatas } from "@myTypes/JournalDatas";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
 import { CommonActions, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -11,6 +12,7 @@ import { auth } from "firebaseConfig";
 import { useFirestoreSub } from "hooks/useFirestoreSub";
 import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import getDateKey from "utils/getDateKey";
 
 type UserScreenNavigationProp = StackNavigationProp<RootStackParamList, "User">;
 type UserScreenRouteProp = RouteProp<RootStackParamList, "User">;
@@ -21,7 +23,7 @@ type Props = {
 };
 
 export default function UserScreen({ navigation, route }: Props) {
-  const { userName, journalData } = route.params;
+  const { userName, journalDatas } = route.params;
   const { unSubscribe } = useFirestoreSub();
 
   const handleLogoutBtn = async () => {
@@ -41,6 +43,37 @@ export default function UserScreen({ navigation, route }: Props) {
     } catch (error) {
       console.error("Failed to log out:", error);
     }
+  };
+
+  // 일기 작성 연속일 구하기
+  const calculateStreak = (journalDatas: JournalDatas): number => {
+    const today = new Date();
+    const dateSet = new Set(
+      journalDatas.map((journalData) =>
+        getDateKey(journalData.createdAt.toDate())
+      )
+    );
+
+    let streak = 0;
+    let currentDate = new Date(today);
+
+    // 오늘을 포함한 연속 일기 작성 일수 계산
+    while (dateSet.has(getDateKey(currentDate))) {
+      streak++;
+      currentDate.setDate(currentDate.getDate() - 1);
+    }
+
+    // 오늘 일기를 쓰지 않은 경우 어제까지의 연속 일기 작성 일수 계산
+    if (streak === 0) {
+      currentDate = new Date(today);
+      currentDate.setDate(currentDate.getDate() - 1);
+      while (dateSet.has(getDateKey(currentDate))) {
+        streak++;
+        currentDate.setDate(currentDate.getDate() - 1);
+      }
+    }
+
+    return streak;
   };
 
   return (
@@ -84,7 +117,7 @@ export default function UserScreen({ navigation, route }: Props) {
             style={{
               width: 80,
               height: 80,
-              marginTop: 20,
+              marginTop: 10,
               backgroundColor: "#f3f3f345",
               borderRadius: 40,
               overflow: "hidden",
@@ -108,15 +141,21 @@ export default function UserScreen({ navigation, route }: Props) {
           <View
             style={{
               marginTop: 16,
+              width: "100%",
+              alignItems: "center",
+              gap: 4,
             }}
           >
-            <Text style={{ color: "white", fontSize: 20, fontWeight: "700" }}>
-              {`작성한 일기 : ${journalData.length}개`}
+            <Text style={{ color: "white", fontSize: 18, fontWeight: "600" }}>
+              {`작성한 일기 : ${journalDatas.length}개`}
+            </Text>
+            <Text style={{ color: "white", fontSize: 18, fontWeight: "600" }}>
+              {`연속 작성 일수 : ${calculateStreak(journalDatas)}일`}
             </Text>
           </View>
           {/* 일기 잔디 */}
-          <View style={{ marginVertical: 14 }} />
-          <DateGrid journalData={journalData} />
+          <View style={{ marginVertical: 8 }} />
+          <DateGrid journalData={journalDatas} />
           {/* 공백 */}
           <View style={{ flexGrow: 1 }} />
           {/* 로그아웃 버튼 */}

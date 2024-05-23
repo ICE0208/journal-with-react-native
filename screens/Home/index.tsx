@@ -117,7 +117,7 @@ export default function HomeScreen({ navigation, route }: Props) {
                 if (isLoading) return;
                 navigation.navigate("User", {
                   userName,
-                  journalData: datas,
+                  journalDatas: datas,
                 });
               }}
               SvgComponent={UserSvg}

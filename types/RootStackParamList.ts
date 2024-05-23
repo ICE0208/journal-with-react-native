@@ -6,5 +6,5 @@ export type RootStackParamList = {
   Home: { userName: string };
   New: undefined;
   Edit: { journalId: string };
-  User: { userName: string; journalData: JournalDatas };
+  User: { userName: string; journalDatas: JournalDatas };
 };

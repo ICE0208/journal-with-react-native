@@ -18,40 +18,11 @@ type Props = {
 };
 
 export default function EditScreen({ navigation, route }: Props) {
-  const [value, setValue] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const { journalId, editTextData } = route.params;
+  const [value, setValue] = useState(editTextData);
   const isUpdating = useRef(false);
 
-  const journalId = route.params.journalId;
   const keyboardHeight = useKeyboard();
-
-  useEffect(() => {
-    const fetchJournal = async () => {
-      try {
-        const currentUser = auth.currentUser;
-        if (!currentUser) {
-          console.error("No current user found.");
-          return;
-        }
-        const currentUserId = currentUser.uid;
-
-        const journalRef = doc(db, "users", currentUserId, "memos", journalId);
-        const journalDoc = await getDoc(journalRef);
-
-        if (journalDoc.exists()) {
-          setValue(journalDoc.data().content);
-        } else {
-          console.error("No such document!");
-        }
-      } catch (error) {
-        console.error("Error fetching journal: ", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchJournal();
-  }, [journalId]);
 
   const handleConfirm = async () => {
     if (isUpdating.current) return;
@@ -79,24 +50,6 @@ export default function EditScreen({ navigation, route }: Props) {
     }
     isUpdating.current = false;
   };
-
-  if (isLoading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "rgba(0,0,0,0.85)",
-        }}
-      >
-        <ActivityIndicator
-          size="large"
-          color="rgba(255,255,255,0.5)"
-        />
-      </View>
-    );
-  }
 
   return (
     <>

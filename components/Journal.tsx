@@ -93,6 +93,7 @@ export default function Journal({ textData, id, createdAt }: Props) {
 
       <JournalModal
         journalId={id}
+        editTextData={textData}
         modalPosition={modalPosition}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}

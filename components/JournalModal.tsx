@@ -9,6 +9,7 @@ import Toast from "react-native-toast-message";
 
 interface Props {
   journalId: string;
+  editTextData: string;
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   modalPosition: { x: number; y: number };
@@ -19,6 +20,7 @@ export default function JournalModal({
   modalVisible,
   setModalVisible,
   modalPosition,
+  editTextData,
 }: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
   const navigation =
@@ -28,7 +30,7 @@ export default function JournalModal({
     setModalVisible(false);
 
     setTimeout(() => {
-      navigation.navigate("Edit", { journalId });
+      navigation.navigate("Edit", { journalId, editTextData });
     });
   };
 

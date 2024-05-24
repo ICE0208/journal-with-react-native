@@ -5,6 +5,6 @@ export type RootStackParamList = {
   SignUp: undefined;
   Home: { userName: string };
   New: undefined;
-  Edit: { journalId: string };
+  Edit: { journalId: string; editTextData: string };
   User: { userName: string; journalDatas: JournalDatas };
 };

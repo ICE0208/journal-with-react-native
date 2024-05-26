@@ -25,7 +25,7 @@ export default function Journal({ textData, id, createdAt, imageInfo }: Props) {
 
   const showMenu = () => {
     buttonRef.current?.measure((fx, fy, width, height, px, py) => {
-      setMenuPosition({ x: px - 60, y: py + height });
+      setMenuPosition({ x: px - 70, y: py + height });
       setModalVisible(true);
     });
   };
@@ -134,7 +134,7 @@ export default function Journal({ textData, id, createdAt, imageInfo }: Props) {
 const styles = StyleSheet.create({
   container: {
     position: "relative",
-    marginHorizontal: 20,
+    marginHorizontal: 10,
   },
   pressable: {
     opacity: 1,

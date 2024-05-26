@@ -133,7 +133,7 @@ export default function JournalModal({
 const styles = StyleSheet.create({
   menu: {
     position: "absolute",
-    backgroundColor: "rgba(20,20,20,0.7)",
+    backgroundColor: "rgba(20,20,20,0.85)",
     borderRadius: 12,
     paddingVertical: 4,
     paddingHorizontal: 30,
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.25)",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
     justifyContent: "center",
     alignItems: "center",
   },

@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-end",
-    marginHorizontal: 50,
+    marginHorizontal: 46,
     marginTop: 30,
     marginBottom: 20,
   },

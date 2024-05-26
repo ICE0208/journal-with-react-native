@@ -8,15 +8,11 @@ import {
   View,
 } from "react-native";
 import Journal from "./Journal";
+import { JournalDatas } from "@myTypes/JournalDatas";
 
 interface Props {
   isLoading: boolean;
-  datas: {
-    content: string;
-    createdAt: Timestamp;
-    updatedAt: Timestamp | undefined;
-    id: string;
-  }[];
+  datas: JournalDatas;
   onScroll: (e: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }
 
@@ -40,6 +36,7 @@ export default function Journals({ datas, isLoading, onScroll }: Props) {
               <Journal
                 key={key}
                 textData={data.content}
+                imageInfo={data.image}
                 id={data.id}
                 createdAt={data.createdAt?.toDate() ?? new Date()}
               />

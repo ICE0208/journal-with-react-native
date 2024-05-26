@@ -1,19 +1,21 @@
 import React, { useState, useRef } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import formatDate from "utils/formatDate";
 import Divider from "./Divider";
 import JournalModal from "./JournalModal";
 import Toast from "react-native-toast-message";
+import { ImageInfo } from "@myTypes/JournalDatas";
 
 interface Props {
   textData: string;
   id: string;
   createdAt: Date;
+  imageInfo?: ImageInfo;
 }
 
 const NUM_OF_LINES = 5;
 
-export default function Journal({ textData, id, createdAt }: Props) {
+export default function Journal({ textData, id, createdAt, imageInfo }: Props) {
   const [showMore, setShowMore] = useState(false);
   const [lines, setLines] = useState(-1);
   const [isExpand, setIsExpand] = useState(false);
@@ -39,6 +41,19 @@ export default function Journal({ textData, id, createdAt }: Props) {
           onPress={() => setIsExpand((prev) => !prev)}
         >
           <View style={styles.journalContainer}>
+            {imageInfo && (
+              <Image
+                source={{ uri: imageInfo.imageURL }}
+                style={{
+                  width: "100%",
+                  height: 140,
+                  resizeMode: "cover",
+                  borderRadius: 6,
+                  marginBottom: 12,
+                  backgroundColor: "gray",
+                }}
+              />
+            )}
             <Text
               style={styles.journalText}
               numberOfLines={isExpand ? lines : NUM_OF_LINES}
@@ -65,6 +80,18 @@ export default function Journal({ textData, id, createdAt }: Props) {
         </Pressable>
       ) : (
         <View style={styles.journalContainer}>
+          {imageInfo && (
+            <Image
+              source={{ uri: imageInfo.imageURL }}
+              style={{
+                width: "100%",
+                height: 140,
+                resizeMode: "cover",
+                borderRadius: 6,
+                marginBottom: 12,
+              }}
+            />
+          )}
           <Text
             style={styles.journalText}
             onTextLayout={({ nativeEvent: { lines } }) => {

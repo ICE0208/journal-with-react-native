@@ -55,6 +55,7 @@ export default function HomeScreen({ navigation, route }: Props) {
       createdAt: doc.data().createdAt,
       updatedAt: doc.data().updatedAt,
       id: doc.id,
+      image: doc.data().image,
     }));
     setDatas(initDatas);
     setIsLoading(false);
@@ -80,6 +81,7 @@ export default function HomeScreen({ navigation, route }: Props) {
           createdAt: doc.data().createdAt,
           updatedAt: doc.data().updatedAt,
           id: doc.id,
+          image: doc.data().image,
         }));
         setDatas(updatedDatas);
       }

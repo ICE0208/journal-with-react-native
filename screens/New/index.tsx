@@ -1,6 +1,8 @@
 import { RootStackParamList } from "@myTypes/RootStackParamList";
 import { StackNavigationProp } from "@react-navigation/stack";
+import ImageSvg from "assets/svgs/ImageSvg";
 import ModalHeader from "components/ModalHeader";
+import SvgButton from "components/SvgButton";
 import { StatusBar } from "expo-status-bar";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "firebaseConfig";
@@ -18,7 +20,7 @@ export default function NewScreen({ navigation }: Props) {
   const [value, setValue] = useState("");
   const isLoading = useRef(false);
 
-  const kayboardHeight = useKeyboard();
+  const keyboardHeight = useKeyboard();
 
   const handleConfirm = async () => {
     if (isLoading.current) return;
@@ -69,7 +71,14 @@ export default function NewScreen({ navigation }: Props) {
           right={{ text: "확인", onPress: handleConfirm }}
           center={{ text: "새로운 일기" }}
         />
-        <View style={{ flex: 1, width: "100%", paddingBottom: kayboardHeight }}>
+        <View
+          style={{
+            flex: 1,
+            width: "100%",
+            marginBottom: keyboardHeight,
+            position: "relative",
+          }}
+        >
           <TextInput
             style={{
               marginTop: 30,
@@ -87,6 +96,26 @@ export default function NewScreen({ navigation }: Props) {
             autoFocus={true}
             scrollEnabled={true}
           />
+          <View
+            style={{
+              width: 60,
+              height: 60,
+              backgroundColor: "rgb(86, 86, 86)e",
+              borderRadius: 30,
+              position: "absolute",
+              right: 0,
+              bottom: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <SvgButton
+              size={24}
+              SvgComponent={ImageSvg}
+              hitSlop={24}
+            />
+          </View>
         </View>
       </View>
     </>

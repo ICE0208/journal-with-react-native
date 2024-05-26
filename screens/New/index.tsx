@@ -14,6 +14,7 @@ import { useKeyboard } from "hooks/useKeyboard";
 import getImageId from "utils/getImageId";
 import resizeImage from "utils/resizeImage";
 import Toast from "react-native-toast-message";
+import styles from "./styles";
 
 type NewScreenNavigationProp = StackNavigationProp<RootStackParamList, "New">;
 
@@ -140,14 +141,7 @@ export default function NewScreen({ navigation }: Props) {
   return (
     <>
       <StatusBar style="light" />
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "rgba(0,0,0,0.85)",
-          alignItems: "center",
-          padding: 20,
-        }}
-      >
+      <View style={styles.container}>
         <ModalHeader
           left={{
             text: "취소",
@@ -158,35 +152,16 @@ export default function NewScreen({ navigation }: Props) {
           right={{ text: "확인", onPress: handleConfirm }}
           center={{ text: "새로운 일기" }}
         />
-        <View
-          style={{
-            flex: 1,
-            width: "100%",
-            marginTop: 20,
-            marginBottom: keyboardHeight,
-            position: "relative",
-          }}
-        >
+        <View style={[styles.modalContainer, { marginBottom: keyboardHeight }]}>
           {image && (
             <Image
               source={{ uri: image }}
-              style={{
-                width: "100%",
-                height: 200,
-                resizeMode: "cover",
-                borderRadius: 16,
-                marginBottom: 16,
-              }}
+              style={styles.image}
               onLoadEnd={onImageLoad}
             />
           )}
           <TextInput
-            style={{
-              width: "100%",
-              color: "ghostwhite",
-              fontSize: 16,
-              flex: 1,
-            }}
+            style={styles.textInput}
             onChangeText={setValue}
             value={value}
             placeholder="글쓰기를 시작하세요..."
@@ -196,20 +171,7 @@ export default function NewScreen({ navigation }: Props) {
             autoFocus={true}
             scrollEnabled={true}
           />
-          <View
-            style={{
-              width: 60,
-              height: 60,
-              backgroundColor: "rgb(86, 86, 86)",
-              borderRadius: 30,
-              position: "absolute",
-              right: 0,
-              bottom: 0,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <View style={styles.imageButtonContainer}>
             <SvgButton
               size={24}
               SvgComponent={ImageSvg}

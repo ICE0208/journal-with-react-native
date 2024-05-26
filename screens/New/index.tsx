@@ -1,15 +1,17 @@
-import { RootStackParamList } from "@myTypes/RootStackParamList";
+import React, { useRef, useState } from "react";
+import { Image, TextInput, View } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { auth, db, storage } from "firebaseConfig";
+import * as ImagePicker from "expo-image-picker";
+import { RootStackParamList } from "@myTypes/RootStackParamList";
 import ImageSvg from "assets/svgs/ImageSvg";
 import ModalHeader from "components/ModalHeader";
 import SvgButton from "components/SvgButton";
 import { StatusBar } from "expo-status-bar";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { auth, db } from "firebaseConfig";
 import { useKeyboard } from "hooks/useKeyboard";
-import { useRef, useState } from "react";
-import { Image, TextInput, View } from "react-native";
-import * as ImagePicker from "expo-image-picker";
+import getImageId from "utils/getImageId";
 
 type NewScreenNavigationProp = StackNavigationProp<RootStackParamList, "New">;
 
@@ -22,10 +24,13 @@ export default function NewScreen({ navigation }: Props) {
   const isLoading = useRef(false);
   const keyboardHeight = useKeyboard();
 
+  const isSelectingImage = useRef(false);
+  const imageLoadTimeoutId = useRef(0);
   const [image, setImage] = useState<string | null>(null);
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
+    if (isSelectingImage.current) return;
+    isSelectingImage.current = true;
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -36,29 +41,78 @@ export default function NewScreen({ navigation }: Props) {
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
+    imageLoadTimeoutId.current = Number(
+      setTimeout(() => {
+        isSelectingImage.current = false;
+      }, 3000)
+    );
+  };
+  const onImageLoad = () => {
+    clearTimeout(imageLoadTimeoutId.current);
+    isSelectingImage.current = false;
+  };
+  const uploadImage = async (uri: string, userId: string) => {
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      const imageId = getImageId(userId);
+      const storageRef = ref(storage, `/images/${imageId}`);
+      const metadata = {
+        customMetadata: {
+          uid: userId,
+        },
+      };
+      await uploadBytes(storageRef, blob, metadata);
+      const imageURL = await getDownloadURL(storageRef);
+      return { imageURL, imageId };
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   };
 
   const handleConfirm = async () => {
+    if (isSelectingImage.current) return;
     if (isLoading.current) return;
     isLoading.current = true;
 
     try {
-      // 현재 사용자의 UID 가져오기
       const currentUser = auth.currentUser;
       if (!currentUser) {
         console.error("No current user found.");
+        isLoading.current = false;
         return;
       }
       const currentUserId = currentUser.uid;
 
-      // 'memos' 컬렉션에 메모 추가
-      await addDoc(collection(db, "users", currentUserId, "memos"), {
-        content: value,
-        createdAt: serverTimestamp(),
-      });
+      let imageURL = null;
+      let imageId = null;
+      if (image) {
+        const imageInfo = await uploadImage(image, currentUserId);
+        if (!imageInfo) {
+          console.error("Image Upload Error :(");
+          isLoading.current = false;
+          return;
+        }
+        [imageURL, imageId] = [imageInfo.imageURL, imageInfo.imageId];
+        await addDoc(collection(db, "users", currentUserId, "memos"), {
+          content: value,
+          createdAt: serverTimestamp(),
+          image: {
+            imageId,
+            imageURL,
+          },
+        });
+      } else {
+        await addDoc(collection(db, "users", currentUserId, "memos"), {
+          content: value,
+          createdAt: serverTimestamp(),
+          image: null,
+        });
+      }
 
-      // 메모 추가 후 입력 필드 비우기
       setValue("");
+      setImage(null);
       navigation.pop();
     } catch (error) {
       console.error("Error adding memo: ", error);
@@ -106,6 +160,7 @@ export default function NewScreen({ navigation }: Props) {
                 borderRadius: 16,
                 marginBottom: 16,
               }}
+              onLoadEnd={onImageLoad}
             />
           )}
           <TextInput
@@ -128,7 +183,7 @@ export default function NewScreen({ navigation }: Props) {
             style={{
               width: 60,
               height: 60,
-              backgroundColor: "rgb(86, 86, 86)e",
+              backgroundColor: "rgb(86, 86, 86)",
               borderRadius: 30,
               position: "absolute",
               right: 0,

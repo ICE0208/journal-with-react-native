@@ -34,7 +34,7 @@ export default function NewScreen({ navigation }: Props) {
     if (isSelectingImage.current) return;
     isSelectingImage.current = true;
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 0.2,

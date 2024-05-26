@@ -8,7 +8,8 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "firebaseConfig";
 import { useKeyboard } from "hooks/useKeyboard";
 import { useRef, useState } from "react";
-import { TextInput, View } from "react-native";
+import { Image, TextInput, View } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 
 type NewScreenNavigationProp = StackNavigationProp<RootStackParamList, "New">;
 
@@ -19,8 +20,23 @@ type Props = {
 export default function NewScreen({ navigation }: Props) {
   const [value, setValue] = useState("");
   const isLoading = useRef(false);
-
   const keyboardHeight = useKeyboard();
+
+  const [image, setImage] = useState<string | null>(null);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   const handleConfirm = async () => {
     if (isLoading.current) return;
@@ -75,13 +91,25 @@ export default function NewScreen({ navigation }: Props) {
           style={{
             flex: 1,
             width: "100%",
+            marginTop: 20,
             marginBottom: keyboardHeight,
             position: "relative",
           }}
         >
+          {image && (
+            <Image
+              source={{ uri: image }}
+              style={{
+                width: "100%",
+                height: 200,
+                resizeMode: "cover",
+                borderRadius: 16,
+                marginBottom: 16,
+              }}
+            />
+          )}
           <TextInput
             style={{
-              marginTop: 30,
               width: "100%",
               color: "ghostwhite",
               fontSize: 16,
@@ -114,6 +142,7 @@ export default function NewScreen({ navigation }: Props) {
               size={24}
               SvgComponent={ImageSvg}
               hitSlop={24}
+              onPress={pickImage}
             />
           </View>
         </View>

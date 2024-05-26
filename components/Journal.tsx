@@ -121,6 +121,7 @@ export default function Journal({ textData, id, createdAt, imageInfo }: Props) {
       <JournalModal
         journalId={id}
         editTextData={textData}
+        imageInfo={imageInfo}
         modalPosition={modalPosition}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}

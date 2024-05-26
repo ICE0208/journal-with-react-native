@@ -1,9 +1,12 @@
+import React from "react";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { ImageInfo } from "@myTypes/JournalDatas";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { FirebaseError } from "firebase/app";
 import { deleteDoc, doc } from "firebase/firestore";
-import { auth, db } from "firebaseConfig";
+import { deleteObject, ref } from "firebase/storage";
+import { auth, db, storage } from "firebaseConfig";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 
@@ -11,6 +14,7 @@ interface Props {
   journalId: string;
   editTextData: string;
   modalVisible: boolean;
+  imageInfo?: ImageInfo;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   modalPosition: { x: number; y: number };
 }
@@ -21,6 +25,7 @@ export default function JournalModal({
   setModalVisible,
   modalPosition,
   editTextData,
+  imageInfo,
 }: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
   const navigation =
@@ -59,8 +64,15 @@ export default function JournalModal({
           const currentUserId = currentUser.uid;
 
           try {
+            // Firestore에서 메모 삭제
             await deleteDoc(doc(db, "users", currentUserId, "memos", memoId));
-            console.log("Memo deleted successfully");
+
+            // Storage에서 이미지 삭제
+            if (imageInfo && imageInfo.imageId) {
+              const imageRef = ref(storage, `/images/${imageInfo.imageId}`);
+              await deleteObject(imageRef);
+            }
+
             Toast.show({
               type: "success",
               text1: "삭제 완료",

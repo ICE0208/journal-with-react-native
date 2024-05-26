@@ -12,6 +12,8 @@ import SvgButton from "components/SvgButton";
 import { StatusBar } from "expo-status-bar";
 import { useKeyboard } from "hooks/useKeyboard";
 import getImageId from "utils/getImageId";
+import resizeImage from "utils/resizeImage";
+import Toast from "react-native-toast-message";
 
 type NewScreenNavigationProp = StackNavigationProp<RootStackParamList, "New">;
 
@@ -35,22 +37,37 @@ export default function NewScreen({ navigation }: Props) {
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0.2,
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-    imageLoadTimeoutId.current = Number(
-      setTimeout(() => {
+      const { resizedUri: resizedImageUri, resizedSize: resizedImageSize } =
+        await resizeImage(result.assets[0].uri, 800, 600);
+      if (resizedImageSize > 3 * 1024 * 1024) {
+        Toast.show({
+          type: "error",
+          text1: "이미지 로드 실패",
+          text2: "이미지가 너무 큽니다.",
+        });
         isSelectingImage.current = false;
-      }, 3000)
-    );
+        return;
+      }
+      setImage(resizedImageUri);
+      imageLoadTimeoutId.current = Number(
+        setTimeout(() => {
+          isSelectingImage.current = false;
+        }, 3000)
+      );
+    } else {
+      isSelectingImage.current = false;
+    }
   };
+
   const onImageLoad = () => {
     clearTimeout(imageLoadTimeoutId.current);
     isSelectingImage.current = false;
   };
+
   const uploadImage = async (uri: string, userId: string) => {
     try {
       const response = await fetch(uri);
@@ -115,7 +132,7 @@ export default function NewScreen({ navigation }: Props) {
       setImage(null);
       navigation.pop();
     } catch (error) {
-      console.error("Error adding memo: ", error);
+      console.error("Error adding memo:", error);
     }
     isLoading.current = false;
   };
@@ -201,6 +218,7 @@ export default function NewScreen({ navigation }: Props) {
             />
           </View>
         </View>
+        <Toast topOffset={70} />
       </View>
     </>
   );

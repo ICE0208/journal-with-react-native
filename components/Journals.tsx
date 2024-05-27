@@ -1,14 +1,14 @@
 import { Timestamp } from "firebase/firestore";
 import {
+  FlatList,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 import Journal from "./Journal";
-import { JournalDatas } from "@myTypes/JournalDatas";
+import { JournalData, JournalDatas } from "@myTypes/JournalDatas";
 
 interface Props {
   isLoading: boolean;
@@ -17,6 +17,17 @@ interface Props {
 }
 
 export default function Journals({ datas, isLoading, onScroll }: Props) {
+  const renderItem = ({ item }: { item: JournalData }) => {
+    return (
+      <Journal
+        textData={item.content}
+        imageInfo={item.image}
+        id={item.id}
+        createdAt={item.createdAt?.toDate() ?? new Date()}
+      />
+    );
+  };
+
   return (
     <>
       {isLoading ? (
@@ -24,25 +35,16 @@ export default function Journals({ datas, isLoading, onScroll }: Props) {
           <Text style={styles.infoText}>Loading...</Text>
         </View>
       ) : datas.length > 0 ? (
-        <ScrollView
+        <FlatList
+          data={datas}
+          renderItem={renderItem}
+          keyExtractor={(item) =>
+            `${item.id}-${item.updatedAt?.toMillis() ?? 0}`
+          }
           contentContainerStyle={styles.memosContainer}
           onScroll={onScroll}
           scrollEventThrottle={100}
-        >
-          {datas.map((data) => {
-            // 내용을 업데이트했을 때 다시 렌더링되도록 키값을 업데이트 시간을 기준으로 수정
-            const key = `${data.id}-${data.updatedAt ?? 0}`;
-            return (
-              <Journal
-                key={key}
-                textData={data.content}
-                imageInfo={data.image}
-                id={data.id}
-                createdAt={data.createdAt?.toDate() ?? new Date()}
-              />
-            );
-          })}
-        </ScrollView>
+        />
       ) : (
         <View style={styles.infoContainer}>
           <Text style={styles.infoText}>Nothing Here</Text>

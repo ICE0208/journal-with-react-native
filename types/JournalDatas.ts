@@ -5,7 +5,7 @@ export interface ImageInfo {
   imageURL: string;
 }
 
-interface JournalData {
+export interface JournalData {
   content: string;
   createdAt: Timestamp;
   updatedAt: Timestamp | undefined;

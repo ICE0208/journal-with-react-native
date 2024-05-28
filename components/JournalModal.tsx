@@ -1,6 +1,6 @@
 import React from "react";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { ImageInfo } from "@myTypes/JournalDatas";
+import { ImageInfo, JournalData } from "@myTypes/JournalDatas";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { FirebaseError } from "firebase/app";
@@ -13,6 +13,7 @@ import Toast from "react-native-toast-message";
 interface Props {
   journalId: string;
   editTextData: string;
+  editImageData: JournalData["image"];
   modalVisible: boolean;
   imageInfo?: ImageInfo;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,6 +24,7 @@ export default function JournalModal({
   journalId,
   modalVisible,
   setModalVisible,
+  editImageData,
   modalPosition,
   editTextData,
   imageInfo,
@@ -35,7 +37,7 @@ export default function JournalModal({
     setModalVisible(false);
 
     setTimeout(() => {
-      navigation.navigate("Edit", { journalId, editTextData });
+      navigation.navigate("Edit", { journalId, editTextData, editImageData });
     });
   };
 

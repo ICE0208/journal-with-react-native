@@ -1,11 +1,5 @@
-import { useEffect, useState, useRef } from "react";
-import {
-  TextInput,
-  View,
-  ActivityIndicator,
-  SafeAreaView,
-  Image,
-} from "react-native";
+import React, { useRef, useState } from "react";
+import { Image, TextInput, View } from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
@@ -26,6 +20,7 @@ import {
 } from "firebase/storage";
 import SvgButton from "components/SvgButton";
 import ImageSvg from "assets/svgs/ImageSvg";
+import styles from "./styles";
 
 type EditScreenNavigationProp = StackNavigationProp<RootStackParamList, "Edit">;
 type EditScreenRouteProp = RouteProp<RootStackParamList, "Edit">;
@@ -119,29 +114,22 @@ export default function EditScreen({ navigation, route }: Props) {
       const currentUserId = currentUser.uid;
       const journalRef = doc(db, "users", currentUserId, "memos", journalId);
 
-      // 이미지 데이터가 똑같다면
       if (image === editImageData?.imageURL) {
-        // value만 업데이트
         await updateDoc(journalRef, {
           content: value,
           updatedAt: serverTimestamp(),
         });
-      }
-      // 이미지 데이터가 바뀌었는데, 이미지가 존재함.
-      else if (image !== null) {
-        // 기존 이미지가 있다면 지우기
+      } else if (image !== null) {
         if (editImageData) {
           const imageRef = ref(storage, `/images/${editImageData.imageId}`);
           await deleteObject(imageRef);
         }
-        // 새로운 이미지 업로드하기
         const imageInfo = await uploadImage(image, currentUserId);
         if (!imageInfo) {
           console.error("Image Upload Error :(");
           isUpdating.current = false;
           return;
         }
-        // 이미지와 value 업데이트
         await updateDoc(journalRef, {
           content: value,
           updatedAt: serverTimestamp(),
@@ -150,15 +138,11 @@ export default function EditScreen({ navigation, route }: Props) {
             imageURL: imageInfo.imageURL,
           },
         });
-      }
-      // 이미지 데이터가 바뀌었는데, 이미지가 존재하지 않음.
-      else {
-        // 기존 이미지가 있다면 지우기
+      } else {
         if (editImageData) {
           const imageRef = ref(storage, `/images/${editImageData.imageId}`);
           await deleteObject(imageRef);
         }
-        // value만 업데이트
         await updateDoc(journalRef, {
           content: value,
           updatedAt: serverTimestamp(),
@@ -177,14 +161,7 @@ export default function EditScreen({ navigation, route }: Props) {
   return (
     <>
       <StatusBar style="light" />
-      <View
-        style={{
-          flex: 1,
-          alignItems: "center",
-          padding: 20,
-          backgroundColor: "rgba(0,0,0,0.85)",
-        }}
-      >
+      <View style={styles.container}>
         <ModalHeader
           left={{
             text: "취소",
@@ -195,35 +172,16 @@ export default function EditScreen({ navigation, route }: Props) {
           right={{ text: "확인", onPress: handleConfirm }}
           center={{ text: "일기 수정" }}
         />
-        <View
-          style={{
-            flex: 1,
-            width: "100%",
-            marginBottom: keyboardHeight,
-            marginTop: 20,
-            position: "relative",
-          }}
-        >
+        <View style={[styles.modalContainer, { marginBottom: keyboardHeight }]}>
           {image && (
             <Image
               source={{ uri: image }}
-              style={{
-                width: "100%",
-                height: 200,
-                resizeMode: "cover",
-                borderRadius: 16,
-                marginBottom: 16,
-              }}
+              style={styles.image}
               onLoadEnd={onImageLoad}
             />
           )}
           <TextInput
-            style={{
-              width: "100%",
-              color: "ghostwhite",
-              fontSize: 16,
-              flex: 1,
-            }}
+            style={styles.textInput}
             onChangeText={setValue}
             value={value}
             placeholder="글쓰기를 시작하세요..."
@@ -233,20 +191,7 @@ export default function EditScreen({ navigation, route }: Props) {
             autoFocus={true}
             scrollEnabled={true}
           />
-          <View
-            style={{
-              width: 60,
-              height: 60,
-              backgroundColor: "rgb(86, 86, 86)",
-              borderRadius: 30,
-              position: "absolute",
-              right: 0,
-              bottom: 0,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <View style={styles.imageButtonContainer}>
             <SvgButton
               size={24}
               SvgComponent={ImageSvg}

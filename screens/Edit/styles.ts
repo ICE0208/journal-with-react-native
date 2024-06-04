@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     borderRadius: 16,
     marginBottom: 16,
+    backgroundColor: "gray",
   },
   textInput: {
     width: "100%",

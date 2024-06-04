@@ -4,7 +4,12 @@ import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
 import ModalHeader from "components/ModalHeader";
-import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import {
+  deleteField,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { auth, db, storage } from "firebaseConfig";
 import { useKeyboard } from "hooks/useKeyboard";
 import { StatusBar } from "expo-status-bar";
@@ -21,6 +26,8 @@ import {
 import SvgButton from "components/SvgButton";
 import ImageSvg from "assets/svgs/ImageSvg";
 import styles from "./styles";
+import { ImageWithDeleteBtn } from "components/ImageWithDeleteBtn";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 
 type EditScreenNavigationProp = StackNavigationProp<RootStackParamList, "Edit">;
 type EditScreenRouteProp = RouteProp<RootStackParamList, "Edit">;
@@ -134,6 +141,7 @@ export default function EditScreen({ navigation, route }: Props) {
         await updateDoc(journalRef, {
           content: value,
           updatedAt: serverTimestamp(),
+          image: deleteField(),
         });
       }
 
@@ -144,6 +152,30 @@ export default function EditScreen({ navigation, route }: Props) {
       console.error("Error updating memo: ", error);
     }
     isUpdating.current = false;
+  };
+
+  const { showActionSheetWithOptions } = useActionSheet();
+  const handleDelete = () => {
+    const options = ["삭제", "취소"];
+    const destructiveButtonIndex = 0;
+    const cancelButtonIndex = 1;
+    const message =
+      "해당 사진을 삭제하시겠습니까? 이 동작을 취소할 수 없습니다.";
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+        message,
+        autoFocus: true,
+      },
+      async (selectedIndex: number | undefined) => {
+        if (selectedIndex === destructiveButtonIndex) {
+          setImage(null);
+        }
+      }
+    );
   };
 
   return (
@@ -162,10 +194,11 @@ export default function EditScreen({ navigation, route }: Props) {
         />
         <View style={[styles.modalContainer, { marginBottom: keyboardHeight }]}>
           {image && (
-            <Image
+            <ImageWithDeleteBtn
               source={{ uri: image }}
               style={styles.image}
               onLoadEnd={onImageLoad}
+              onDelete={handleDelete}
             />
           )}
           <TextInput

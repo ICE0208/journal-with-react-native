@@ -15,6 +15,8 @@ import getImageId from "utils/getImageId";
 import resizeImage from "utils/resizeImage";
 import Toast from "react-native-toast-message";
 import styles from "./styles";
+import { ImageWithDeleteBtn } from "components/ImageWithDeleteBtn";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 
 type NewScreenNavigationProp = StackNavigationProp<RootStackParamList, "New">;
 
@@ -126,6 +128,30 @@ export default function NewScreen({ navigation }: Props) {
     isLoading.current = false;
   };
 
+  const { showActionSheetWithOptions } = useActionSheet();
+  const handleDelete = () => {
+    const options = ["삭제", "취소"];
+    const destructiveButtonIndex = 0;
+    const cancelButtonIndex = 1;
+    const message =
+      "해당 사진을 삭제하시겠습니까? 이 동작을 취소할 수 없습니다.";
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+        message,
+        autoFocus: true,
+      },
+      async (selectedIndex: number | undefined) => {
+        if (selectedIndex === destructiveButtonIndex) {
+          setImage(null);
+        }
+      }
+    );
+  };
+
   return (
     <>
       <StatusBar style="light" />
@@ -142,10 +168,11 @@ export default function NewScreen({ navigation }: Props) {
         />
         <View style={[styles.modalContainer, { marginBottom: keyboardHeight }]}>
           {image && (
-            <Image
+            <ImageWithDeleteBtn
               source={{ uri: image }}
               style={styles.image}
               onLoadEnd={onImageLoad}
+              onDelete={handleDelete}
             />
           )}
           <TextInput

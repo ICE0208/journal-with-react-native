@@ -65,5 +65,10 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderBottomWidth: 1,
     width: "100%",
+    ...Platform.select({
+      web: {
+        outlineStyle: "none",
+      },
+    }),
   },
 });

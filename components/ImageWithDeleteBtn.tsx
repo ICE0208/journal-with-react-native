@@ -1,3 +1,4 @@
+import XMarkSvg from "assets/svgs/XMarkSvg";
 import React from "react";
 import { Image, ImageProps, Pressable, Text, View } from "react-native";
 
@@ -34,7 +35,8 @@ export const ImageWithDeleteBtn = ({
         left: 6,
       }}
     >
-      <Text style={{ color: "white", fontWeight: "bold" }}>×</Text>
+      <XMarkSvg />
+      {/* <Text style={{ color: "white", fontWeight: "bold" }}>×</Text> */}
     </Pressable>
   </View>
 );

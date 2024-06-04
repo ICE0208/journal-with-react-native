@@ -1,10 +1,19 @@
 import React, { useState, useRef } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import formatDate from "utils/formatDate";
 import Divider from "./Divider";
 import JournalModal from "./JournalModal";
 import Toast from "react-native-toast-message";
 import { ImageInfo } from "@myTypes/JournalDatas";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "@myTypes/RootStackParamList";
 
 interface Props {
   textData: string;
@@ -23,11 +32,18 @@ export default function Journal({ textData, id, createdAt, imageInfo }: Props) {
   const [modalPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const buttonRef = useRef<View>(null);
 
+  const navigation =
+    useNavigation<NavigationProp<RootStackParamList, "Image">>();
+
   const showMenu = () => {
     buttonRef.current?.measure((fx, fy, width, height, px, py) => {
       setMenuPosition({ x: px - 70, y: py + height });
       setModalVisible(true);
     });
+  };
+
+  const handleClickImage = () => {
+    navigation.navigate("Image", { imageURL: imageInfo?.imageURL ?? "" });
   };
 
   return (
@@ -42,17 +58,19 @@ export default function Journal({ textData, id, createdAt, imageInfo }: Props) {
         >
           <View style={styles.journalContainer}>
             {imageInfo && (
-              <Image
-                source={{ uri: imageInfo.imageURL }}
-                style={{
-                  width: "100%",
-                  height: 140,
-                  resizeMode: "cover",
-                  borderRadius: 6,
-                  marginBottom: 12,
-                  backgroundColor: "gray",
-                }}
-              />
+              <TouchableOpacity onPress={handleClickImage}>
+                <Image
+                  source={{ uri: imageInfo.imageURL }}
+                  style={{
+                    width: "100%",
+                    height: 140,
+                    resizeMode: "cover",
+                    borderRadius: 6,
+                    marginBottom: 12,
+                    backgroundColor: "gray",
+                  }}
+                />
+              </TouchableOpacity>
             )}
             <Text
               style={styles.journalText}
@@ -81,16 +99,18 @@ export default function Journal({ textData, id, createdAt, imageInfo }: Props) {
       ) : (
         <View style={styles.journalContainer}>
           {imageInfo && (
-            <Image
-              source={{ uri: imageInfo.imageURL }}
-              style={{
-                width: "100%",
-                height: 140,
-                resizeMode: "cover",
-                borderRadius: 6,
-                marginBottom: 12,
-              }}
-            />
+            <TouchableOpacity onPress={handleClickImage}>
+              <Image
+                source={{ uri: imageInfo.imageURL }}
+                style={{
+                  width: "100%",
+                  height: 140,
+                  resizeMode: "cover",
+                  borderRadius: 6,
+                  marginBottom: 12,
+                }}
+              />
+            </TouchableOpacity>
           )}
           <Text
             style={styles.journalText}

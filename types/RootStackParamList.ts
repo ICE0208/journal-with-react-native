@@ -11,4 +11,5 @@ export type RootStackParamList = {
     editImageData: JournalData["image"] | null;
   };
   User: { userName: string; journalDatas: JournalDatas };
+  Image: { imageURL: string };
 };

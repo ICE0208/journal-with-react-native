@@ -10,6 +10,7 @@ import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import EditScreen from "@screens/Edit";
 import UserScreen from "@screens/User";
 import FirestoreSubProvider from "components/FirestoreSubProvider";
+import ImageScreen from "@screens/Image";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -59,6 +60,15 @@ export default function App() {
               options={{
                 headerShown: false,
               }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="Image"
+              component={ImageScreen}
+              options={{
+                presentation: "transparentModal",
+                headerShown: false,
+              }}
+              initialParams={{ imageURL: "" }}
             ></Stack.Screen>
           </Stack.Navigator>
         </FirestoreSubProvider>

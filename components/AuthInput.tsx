@@ -44,6 +44,7 @@ export default function AuthInput({
           }
         }}
         placeholder={placeholder}
+        placeholderTextColor="rgb(200, 200, 200)"
       />
     </View>
   );

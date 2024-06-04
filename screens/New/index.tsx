@@ -27,13 +27,10 @@ export default function NewScreen({ navigation }: Props) {
   const isLoading = useRef(false);
   const keyboardHeight = useKeyboard();
 
-  const isSelectingImage = useRef(false);
   const imageLoadTimeoutId = useRef(0);
   const [image, setImage] = useState<string | null>(null);
 
   const pickImage = async () => {
-    if (isSelectingImage.current) return;
-    isSelectingImage.current = true;
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -50,23 +47,15 @@ export default function NewScreen({ navigation }: Props) {
           text1: "이미지 로드 실패",
           text2: "이미지가 너무 큽니다.",
         });
-        isSelectingImage.current = false;
         return;
       }
       setImage(resizedImageUri);
-      imageLoadTimeoutId.current = Number(
-        setTimeout(() => {
-          isSelectingImage.current = false;
-        }, 3000)
-      );
-    } else {
-      isSelectingImage.current = false;
+      imageLoadTimeoutId.current = Number(setTimeout(() => {}, 3000));
     }
   };
 
   const onImageLoad = () => {
     clearTimeout(imageLoadTimeoutId.current);
-    isSelectingImage.current = false;
   };
 
   const uploadImage = async (uri: string, userId: string) => {
@@ -90,7 +79,6 @@ export default function NewScreen({ navigation }: Props) {
   };
 
   const handleConfirm = async () => {
-    if (isSelectingImage.current) return;
     if (isLoading.current) return;
     isLoading.current = true;
 

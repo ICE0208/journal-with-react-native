@@ -173,7 +173,7 @@ export default function EditScreen({ navigation, route }: Props) {
             onChangeText={setValue}
             value={value}
             placeholder="글쓰기를 시작하세요..."
-            placeholderTextColor="ghostwhite"
+            placeholderTextColor="rgb(189, 189, 189)"
             multiline={true}
             textAlignVertical="top"
             autoFocus={true}

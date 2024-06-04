@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
@@ -26,6 +26,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     flex: 1,
     textAlignVertical: "top",
+    ...Platform.select({
+      web: {
+        outlineStyle: "none",
+      },
+    }),
   },
   imageButtonContainer: {
     width: 60,

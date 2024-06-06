@@ -2,8 +2,8 @@
 
 <div align="center">
 
-<h3 align="center">Journal with React Native</h3>
-
+<p align="center">
+<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&center=true&vCenter=true&random=false&width=435&lines=Journal+with+React+Native" alt="Typing SVG" /></a>
   <p align="center">
     리액트 네이티브로 만든 애플 일기앱 클론코딩
     <br />
@@ -13,6 +13,24 @@
     <span>(IOS 기준으로 제작되었기 때문에, 웹 데모에서는 작동하지 않는 기능이 있습니다.)</span>
   </p>
 </div>
+
+## 개요
+
+### 목적
+
+`모바일 프로그래밍` 수업의 개인 프로젝트 과제를 위하여 제작하였습니다.
+
+### 개발 기간
+
+24.05.18 ~ 24.06.04
+
+### 주제 / 필수 조건
+
+아래 3가지 필수 조건을 포함한 자유 주제의 과제입니다.
+
+- [x] 컴포넌트 10개 이상 사용
+- [x] 화면 3개 이상 사용
+- [x] State, Props, Event 사용
 
 ## 기술 스택
 
@@ -50,4 +68,3 @@
 ## 시연 영상
 
 https://github.com/ICE0208/journal-with-react-native/assets/46257328/2a3f992f-43b6-4141-a14a-594f5ea1ad1e
-

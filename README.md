@@ -148,4 +148,4 @@ npm run start
 
 > Expo App 혹은 Web을 이용하여 확인
 
-(자세한 내용은 [[공식문서]](https://docs.expo.dev/more/expo-cli/)를 참고)
+(자세한 내용은 [공식문서](https://docs.expo.dev/more/expo-cli/)를 참고)

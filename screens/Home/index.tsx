@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useRef, useEffect } from "react";
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -14,8 +14,6 @@ import {
   onSnapshot,
   query,
   orderBy,
-  Unsubscribe,
-  Timestamp,
   getDocs,
 } from "firebase/firestore";
 import { auth, db } from "firebaseConfig";
@@ -24,6 +22,10 @@ import Toast from "react-native-toast-message";
 import Journals from "components/Journals";
 import NewJournalBtn from "components/NewJournalBtn";
 import { JournalDatas } from "@myTypes/JournalDatas";
+import { useFirestoreSub } from "hooks/useFirestoreSub";
+import { StatusBar } from "expo-status-bar";
+import SvgButton from "components/SvgButton";
+import UserSvg from "assets/svgs/UserSvg";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type HomeScreenRouteProp = RouteProp<RootStackParamList, "Home">;
@@ -36,9 +38,9 @@ type Props = {
 export default function HomeScreen({ navigation, route }: Props) {
   const [datas, setDatas] = useState<JournalDatas>([]);
   const { userName } = route.params;
-  const unsubscribe = useRef<Unsubscribe>(() => {});
   const [isScrollDown, setIsScrollDown] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { setUnSubscribe } = useFirestoreSub();
 
   const getInitDatas = async () => {
     const initDocs = await getDocs(
@@ -53,6 +55,7 @@ export default function HomeScreen({ navigation, route }: Props) {
       createdAt: doc.data().createdAt,
       updatedAt: doc.data().updatedAt,
       id: doc.id,
+      image: doc.data().image,
     }));
     setDatas(initDatas);
     setIsLoading(false);
@@ -67,7 +70,7 @@ export default function HomeScreen({ navigation, route }: Props) {
 
     getInitDatas();
 
-    unsubscribe.current = onSnapshot(
+    const unSubscribe = onSnapshot(
       query(
         collection(db, "users", auth.currentUser!.uid, "memos"),
         orderBy("createdAt", "desc")
@@ -78,11 +81,13 @@ export default function HomeScreen({ navigation, route }: Props) {
           createdAt: doc.data().createdAt,
           updatedAt: doc.data().updatedAt,
           id: doc.id,
+          image: doc.data().image,
         }));
         setDatas(updatedDatas);
       }
     );
-    return () => unsubscribe.current();
+    setUnSubscribe(unSubscribe);
+    return () => unSubscribe();
   }, []);
 
   useEffect(() => {
@@ -98,18 +103,37 @@ export default function HomeScreen({ navigation, route }: Props) {
   };
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={isScrollDown && { backgroundColor: "#45379f" }}>
-        <Text style={styles.screenTitle}>일기</Text>
-        <Text style={styles.welcomeText}>Hello, {userName}</Text>
-      </SafeAreaView>
-      <Journals
-        isLoading={isLoading}
-        datas={datas}
-        onScroll={handleScroll}
-      />
-      <NewJournalBtn onPress={() => navigation.navigate("New")} />
-      <Toast topOffset={70} />
-    </View>
+    <>
+      <StatusBar style="light" />
+      <View style={styles.container}>
+        <SafeAreaView style={isScrollDown && { backgroundColor: "#45379f" }}>
+          <View style={styles.header}>
+            <View>
+              <Text style={styles.screenTitle}>일기</Text>
+              <Text style={styles.welcomeText}>Hello, {userName}</Text>
+            </View>
+            <SvgButton
+              size={40}
+              hitSlop={12}
+              onPress={() => {
+                if (isLoading) return;
+                navigation.navigate("User", {
+                  userName,
+                  journalDatas: datas,
+                });
+              }}
+              SvgComponent={UserSvg}
+            />
+          </View>
+        </SafeAreaView>
+        <Journals
+          isLoading={isLoading}
+          datas={datas}
+          onScroll={handleScroll}
+        />
+        <NewJournalBtn onPress={() => navigation.navigate("New")} />
+        <Toast topOffset={70} />
+      </View>
+    </>
   );
 }

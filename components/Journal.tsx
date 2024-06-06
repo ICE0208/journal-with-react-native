@@ -1,19 +1,30 @@
 import React, { useState, useRef } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import formatDate from "utils/formatDate";
 import Divider from "./Divider";
 import JournalModal from "./JournalModal";
 import Toast from "react-native-toast-message";
+import { ImageInfo } from "@myTypes/JournalDatas";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "@myTypes/RootStackParamList";
 
 interface Props {
   textData: string;
   id: string;
   createdAt: Date;
+  imageInfo?: ImageInfo;
 }
 
 const NUM_OF_LINES = 5;
 
-export default function Journal({ textData, id, createdAt }: Props) {
+export default function Journal({ textData, id, createdAt, imageInfo }: Props) {
   const [showMore, setShowMore] = useState(false);
   const [lines, setLines] = useState(-1);
   const [isExpand, setIsExpand] = useState(false);
@@ -21,11 +32,18 @@ export default function Journal({ textData, id, createdAt }: Props) {
   const [modalPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const buttonRef = useRef<View>(null);
 
+  const navigation =
+    useNavigation<NavigationProp<RootStackParamList, "Image">>();
+
   const showMenu = () => {
     buttonRef.current?.measure((fx, fy, width, height, px, py) => {
-      setMenuPosition({ x: px - 60, y: py + height });
+      setMenuPosition({ x: px - 70, y: py + height });
       setModalVisible(true);
     });
+  };
+
+  const handleClickImage = () => {
+    navigation.navigate("Image", { imageURL: imageInfo?.imageURL ?? "" });
   };
 
   return (
@@ -39,6 +57,21 @@ export default function Journal({ textData, id, createdAt }: Props) {
           onPress={() => setIsExpand((prev) => !prev)}
         >
           <View style={styles.journalContainer}>
+            {imageInfo && (
+              <TouchableOpacity onPress={handleClickImage}>
+                <Image
+                  source={{ uri: imageInfo.imageURL }}
+                  style={{
+                    width: "100%",
+                    height: 140,
+                    resizeMode: "cover",
+                    borderRadius: 6,
+                    marginBottom: 12,
+                    backgroundColor: "gray",
+                  }}
+                />
+              </TouchableOpacity>
+            )}
             <Text
               style={styles.journalText}
               numberOfLines={isExpand ? lines : NUM_OF_LINES}
@@ -56,6 +89,7 @@ export default function Journal({ textData, id, createdAt }: Props) {
               <Pressable
                 ref={buttonRef}
                 onPress={showMenu}
+                hitSlop={{ top: 4, bottom: 4, left: 16, right: 16 }}
               >
                 <Text style={styles.showMenuText}>···</Text>
               </Pressable>
@@ -64,6 +98,20 @@ export default function Journal({ textData, id, createdAt }: Props) {
         </Pressable>
       ) : (
         <View style={styles.journalContainer}>
+          {imageInfo && (
+            <TouchableOpacity onPress={handleClickImage}>
+              <Image
+                source={{ uri: imageInfo.imageURL }}
+                style={{
+                  width: "100%",
+                  height: 140,
+                  resizeMode: "cover",
+                  borderRadius: 6,
+                  marginBottom: 12,
+                }}
+              />
+            </TouchableOpacity>
+          )}
           <Text
             style={styles.journalText}
             onTextLayout={({ nativeEvent: { lines } }) => {
@@ -82,6 +130,7 @@ export default function Journal({ textData, id, createdAt }: Props) {
             <Pressable
               ref={buttonRef}
               onPress={showMenu}
+              hitSlop={{ top: 4, bottom: 4, left: 16, right: 16 }}
             >
               <Text style={styles.showMenuText}>···</Text>
             </Pressable>
@@ -91,6 +140,9 @@ export default function Journal({ textData, id, createdAt }: Props) {
 
       <JournalModal
         journalId={id}
+        editTextData={textData}
+        editImageData={imageInfo}
+        imageInfo={imageInfo}
         modalPosition={modalPosition}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
@@ -103,7 +155,7 @@ export default function Journal({ textData, id, createdAt }: Props) {
 const styles = StyleSheet.create({
   container: {
     position: "relative",
-    marginHorizontal: 20,
+    marginHorizontal: 10,
   },
   pressable: {
     opacity: 1,
@@ -127,6 +179,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    position: "relative",
   },
   dateText: {
     fontSize: 14,
@@ -138,8 +191,6 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     fontSize: 20,
     paddingVertical: 5,
-    paddingLeft: 12,
-    paddingRight: 4,
   },
   menu: {
     position: "absolute",

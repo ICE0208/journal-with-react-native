@@ -1,15 +1,21 @@
+import React from "react";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { ImageInfo, JournalData } from "@myTypes/JournalDatas";
 import { RootStackParamList } from "@myTypes/RootStackParamList";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { FirebaseError } from "firebase/app";
 import { deleteDoc, doc } from "firebase/firestore";
-import { auth, db } from "firebaseConfig";
+import { deleteObject, ref } from "firebase/storage";
+import { auth, db, storage } from "firebaseConfig";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 
 interface Props {
   journalId: string;
+  editTextData: string;
+  editImageData: JournalData["image"];
   modalVisible: boolean;
+  imageInfo?: ImageInfo;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   modalPosition: { x: number; y: number };
 }
@@ -18,7 +24,10 @@ export default function JournalModal({
   journalId,
   modalVisible,
   setModalVisible,
+  editImageData,
   modalPosition,
+  editTextData,
+  imageInfo,
 }: Props) {
   const { showActionSheetWithOptions } = useActionSheet();
   const navigation =
@@ -28,7 +37,7 @@ export default function JournalModal({
     setModalVisible(false);
 
     setTimeout(() => {
-      navigation.navigate("Edit", { journalId });
+      navigation.navigate("Edit", { journalId, editTextData, editImageData });
     });
   };
 
@@ -57,8 +66,15 @@ export default function JournalModal({
           const currentUserId = currentUser.uid;
 
           try {
+            // Firestore에서 메모 삭제
             await deleteDoc(doc(db, "users", currentUserId, "memos", memoId));
-            console.log("Memo deleted successfully");
+
+            // Storage에서 이미지 삭제
+            if (imageInfo && imageInfo.imageId) {
+              const imageRef = ref(storage, `/images/${imageInfo.imageId}`);
+              await deleteObject(imageRef);
+            }
+
             Toast.show({
               type: "success",
               text1: "삭제 완료",
@@ -97,12 +113,14 @@ export default function JournalModal({
           style={[styles.menu, { top: modalPosition.y, left: modalPosition.x }]}
         >
           <TouchableOpacity
+            hitSlop={{ top: 8, left: 30, right: 30, bottom: 2 }}
             style={styles.menuButton}
             onPress={handleEdit}
           >
             <Text style={styles.editButtonText}>편집</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            hitSlop={{ bottom: 8, left: 30, right: 30, top: 2 }}
             style={styles.menuButton}
             onPress={() => handleDelete(journalId)}
           >
@@ -117,7 +135,7 @@ export default function JournalModal({
 const styles = StyleSheet.create({
   menu: {
     position: "absolute",
-    backgroundColor: "rgba(20,20,20,0.7)",
+    backgroundColor: "rgba(20,20,20,0.85)",
     borderRadius: 12,
     paddingVertical: 4,
     paddingHorizontal: 30,
@@ -140,7 +158,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.25)",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
     justifyContent: "center",
     alignItems: "center",
   },

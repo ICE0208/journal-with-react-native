@@ -133,7 +133,7 @@ npm install
 
 3. 파이어베이스 코드 수정
 
-> firebaseConfig.ts에 있는 firebaseConfig 객체를 본인의 파이버베이스 구성 내용으로 수정  
+> firebaseConfig.ts에 있는 firebaseConfig 객체(16 라인)를 본인의 파이버베이스 구성 내용으로 수정  
 > `파이어베이스 프로젝트 설정 > 일반 > 내 앱` 에서 구성 내용 확인 가능
 
 ### 프로젝트 실행 및 확인

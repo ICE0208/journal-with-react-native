@@ -68,3 +68,83 @@
 ## 시연 영상
 
 https://github.com/ICE0208/journal-with-react-native/assets/46257328/2a3f992f-43b6-4141-a14a-594f5ea1ad1e
+
+## 직접 실행하기
+
+### 사전 작업
+
+1. npm 설치
+2. 파이어베이스 프로젝트 생성
+
+### 파이어베이스 세팅
+
+1. Authentication의 이메일/비밀번호 활성화
+2. Firestore Database 활성화
+
+> 규칙을 아래와 같이 설정
+
+```rules
+rules_version = "2";
+
+service cloud.firestore {
+match /databases/{database}/documents {
+
+    // 사용자의 메모에 대한 규칙 설정
+    match /users/{userId}/memos/{memoId} {
+        // 사용자가 자신의 메모에 대해 읽고 쓸 수 있음
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+  }
+}
+```
+
+3. Storage 활성화
+
+> 규칙을 아래와 같이 설정
+
+```rules
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /images/{imageId} {
+      allow write: if request.auth != null;
+      allow read, delete: if request.auth != null && request.auth.uid == resource.metadata.uid;
+    }
+  }
+}
+```
+
+### 프로젝트 세팅
+
+1. 레포지토리 클론
+
+```bash
+git clone https://github.com/ICE0208/journal-with-react-native
+```
+
+2. NPM 패키지 설치
+
+```bash
+npm install
+```
+
+3. 파이어베이스 코드 수정
+
+> firebaseConfig.ts에 있는 firebaseConfig 객체를 본인의 파이버베이스 구성 내용으로 수정  
+> `파이어베이스 프로젝트 설정 > 일반 > 내 앱` 에서 구성 내용 확인 가능
+
+### 프로젝트 실행 및 확인
+
+1. 실행
+
+```bash
+npm run start
+```
+
+2. 확인
+
+> Expo App 혹은 Web을 이용하여 확인
+
+(자세한 내용은 [[공식문서]](https://docs.expo.dev/more/expo-cli/)를 참고)

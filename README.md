@@ -22,7 +22,8 @@
 
 ### 개발 기간
 
-24.05.18 ~ 24.06.04
+24.05.18 ~ 24.06.04  
+[![wakatime](https://wakatime.com/badge/user/2c47d583-cacf-4ded-9209-07a4aff5bac1/project/9669011d-343b-4da4-90d3-033966c44d7a.svg)](https://wakatime.com/badge/user/2c47d583-cacf-4ded-9209-07a4aff5bac1/project/9669011d-343b-4da4-90d3-033966c44d7a)
 
 ### 주제 / 필수 조건
 

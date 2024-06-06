@@ -46,3 +46,8 @@
 | <center>긴 일기 펼치기</center>                                                                                             | <center>사진 전체 보기</center>                                                                                             | <center>유저 정보 화면</center>                                                                                             |
 | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | <img src="https://github.com/ICE0208/journal-with-react-native/assets/46257328/c7732b9f-e5b3-44d1-a1d6-231c19328ea2"></img> | <img src="https://github.com/ICE0208/journal-with-react-native/assets/46257328/4d2723bc-95d7-4cdd-b4d9-a9ccdef92e3a"></img> | <img src="https://github.com/ICE0208/journal-with-react-native/assets/46257328/4d248343-796b-4f28-90ee-5170dec08d41"></img> |
+
+## 시연 영상
+
+https://github.com/ICE0208/journal-with-react-native/assets/46257328/2a3f992f-43b6-4141-a14a-594f5ea1ad1e
+
